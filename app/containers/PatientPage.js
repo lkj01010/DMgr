@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-
+import connectComponent from '../utils/connectComponent';
 import { Button, Layout, Menu, Breadcrumb, Icon, Row, Col, Divider, Input,
     Tooltip
 } from 'antd';
@@ -8,39 +8,50 @@ import { Button, Layout, Menu, Breadcrumb, Icon, Row, Col, Divider, Input,
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
 
+const Search = Input.Search;
+
 import styles from './PatientPage.css';
 
 type Props = {};
-const Search = Input.Search;
 
+type State = {
+    
+};
 
-const data = [{
-    key: '1',
-    firstName: 'John',
-    lastName: 'Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  }, {
-    key: '2',
-    firstName: 'Jim',
-    lastName: 'Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  }, {
-    key: '3',
-    firstName: 'Joe',
-    lastName: 'Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  }];
-
-
-
-export default class PatientPage extends Component<Props> {
+class PatientPage extends Component<Props> {
     props: Props;
+    state: State;
+
+    static data = [{
+            key: '1',
+            firstName: 'John',
+            lastName: 'Brown',
+            age: 32,
+            address: 'New York No. 1 Lake Park',
+            tags: ['nice', 'developer'],
+        }, {
+            key: '2',
+            firstName: 'Jim',
+            lastName: 'Green',
+            age: 42,
+            address: 'London No. 1 Lake Park',
+            tags: ['loser'],
+        }, {
+            key: '3',
+            firstName: 'Joe',
+            lastName: 'Black',
+            age: 32,
+            address: 'Sidney No. 1 Lake Park',
+            tags: ['cool', 'teacher'],
+    }];
+
+    constructor(props: Props) {
+        super(props);
+
+        this.state = {
+
+        };
+    }
 
     render() {
         return (
@@ -49,15 +60,19 @@ export default class PatientPage extends Component<Props> {
                 
                     <Col span={12} className={styles.leftMainCtn}>
                         <Row type="flex" justify="end" style={{background: '#ddd', padding: 16}}>
-                        <Tooltip placement="bottomLeft" title={'搜索语法提示'}>
-                            <Search
-                                style={{marginRight: 16, width: 200}}
-                                placeholder="id搜索"
-                                onSearch={value => console.log(value)}
-                                enterButton
-                            />
-                        </Tooltip>
-                            <Button type="primary" style={{marginRight: 8}}>新建档案</Button>
+                            <Tooltip placement="bottomLeft" title={'搜索语法提示'}>
+                                <Search
+                                    style={{marginRight: 16, width: 200}}
+                                    placeholder="id搜索"
+                                    onSearch={value => console.log(value)}
+                                    enterButton
+                                />
+                            </Tooltip>
+                                <Button type="primary" style={{marginRight: 8}}
+                                    onClick={this.newPatient.bind(this)}
+                                >
+                                    新建档案
+                                </Button>
                         </Row>
                     </Col>
                     {/* <Divider type="vertical"></Divider> */}
@@ -69,12 +84,21 @@ export default class PatientPage extends Component<Props> {
             
         )
     }
+
+    newPatient() {
+        console.log('haha');
+        const {actions} = this.props;
+        actions.pa_getPatientList();
+    }
 }
 
-// #components-layout-demo-top-side .logo {
-//     width: 120px;
-//     height: 31px;
-//     background: rgba(255,255,255,.2);
-//     margin: 16px 28px 16px 0;
-//     float: left;
-//   }
+function mapStateToProps(state) {
+    return {
+        
+    };
+}
+  
+export default connectComponent({
+    mapStateToProps, 
+    LayoutComponent: PatientPage,
+});
