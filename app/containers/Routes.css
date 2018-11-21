@@ -1,0 +1,10 @@
+.logo {
+    height: 44px;
+    position: relative;
+    line-height: 44px;
+    padding-left: 24px;
+    transition: all .3s;
+    background: #002140;
+    overflow: hidden;
+    /* text-shadow: 0 0 black; */
+}

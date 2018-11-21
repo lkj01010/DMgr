@@ -1,8 +1,15 @@
 .leftMainCtn {
-    background: #fff;
+    background: #eee;
     border-right: solid 4px #001529;
 }
+
 .rightMainCtn {
     background: #fff;
     padding: 16px !important;
+}
+
+.header {
+    background: rgb(255,255,255);
+    padding: 12px 8px;
+    box-shadow: 0 1px 4px rgba(0,21,41,.08);
 }
