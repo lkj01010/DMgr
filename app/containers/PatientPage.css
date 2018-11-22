@@ -1,15 +1,28 @@
 .leftMainCtn {
     background: #eee;
-    border-right: solid 4px #001529;
+    border-right: solid 4px #30404f;
 }
 
 .rightMainCtn {
     background: #fff;
-    padding: 16px !important;
+    /* padding: 16px !important; */
 }
 
 .header {
-    background: rgb(255,255,255);
+    background: rgb(238, 238, 238);
     padding: 12px 8px;
-    box-shadow: 0 1px 4px rgba(0,21,41,.08);
+    box-shadow: 0 1px 4px rgba(0,21,41,.28);
+}
+
+.detailContent {
+    /* margin-top: 8px; */
+    margin: 6px 4px 0px 4px;
+    /* margin-right: 4px; */
+    overflow: auto;
+}
+
+.infoRow {
+    padding: 4px !important;
+    /* margin-left: 8px !important; */
+    /* margin-bottom: 8px; */
 }
