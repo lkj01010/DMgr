@@ -96,6 +96,7 @@ class PatientPage extends Component<Props> {
 
         this.state = {
             showDetail: false,
+            windowHeight: window.innerHeight,
         };
 
         this.columns = [
@@ -130,6 +131,14 @@ class PatientPage extends Component<Props> {
                 },
             }
         ];
+
+        // tofix: implement in main process
+        window.onresize = () => {
+            console.log('h=' + window.innerHeight);
+            this.setState({
+                windowHeight: window.innerHeight,
+            })
+        }
     
     }
 
@@ -182,7 +191,8 @@ class PatientPage extends Component<Props> {
 
     renderTable() {
         return (
-            <Table columns={this.columns} dataSource={data} scroll={{ x: 1500, y: 300 }} size="small" onSelect={this.onClickShowDetail.bind(this)}
+            <Table columns={this.columns} dataSource={data} scroll={{ x: 1500, y: this.state.windowHeight - 200}}
+             size="small" onSelect={this.onClickShowDetail.bind(this)}
             />
         )
     }
