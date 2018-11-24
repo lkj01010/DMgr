@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import connectComponent from '../utils/connectComponent';
 import { Button, Layout, Menu, Breadcrumb, Icon, Row, Col, Divider, Input,
-    Tooltip, Table, Tag, Select,
+    Tooltip, Table, Tag, Select, InputNumber, DatePicker, Collapse,
 } from 'antd';
 
 const { SubMenu } = Menu;
@@ -11,9 +11,10 @@ const { Header, Content, Footer, Sider } = Layout;
 const Search = Input.Search;
 const InputGroup = Input.Group;
 const Option = Select.Option;
+const Panel = Collapse.Panel;
 
 import styles from './PatientPage.css';
-import dk from '../constants/Datakey';
+import {BaseInfo} from '../constants/Datakey';
 
 
 type Props = {};
@@ -86,6 +87,13 @@ const data = [{
     tags: ['cool', 'teacher'],
 }];
 
+const customPanelStyle = {
+    background: '#ebf4fa',
+    // borderRadius: 4,
+    // marginBottom: 8,
+    // overflow: 'hidden'
+};
+
 class PatientPage extends Component<Props> {
     props: Props;
     state: State;
@@ -100,14 +108,14 @@ class PatientPage extends Component<Props> {
         };
 
         this.columns = [
-            { title: dk.id.show, width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
-            { title: dk.name.show, width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
-            { title: dk.age.show, dataIndex: 'address', key: '1', width: 250 },
-            { title: dk.firstDiagnose.show, dataIndex: 'address', key: '3', width: 250 },
-            { title: dk.lastDiagnose.show, dataIndex: 'address', key: '4', width: 250 },
-            { title: dk.cardId.show, dataIndex: 'address', key: '5', width: 250 },
+            { title: BaseInfo.id.show, width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
+            { title: BaseInfo.name.show, width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
+            { title: BaseInfo.age.show, dataIndex: 'address', key: '1', width: 250 },
+            { title: BaseInfo.firstDiagnose.show, dataIndex: 'address', key: '3', width: 250 },
+            { title: BaseInfo.lastDiagnose.show, dataIndex: 'address', key: '4', width: 250 },
+            { title: BaseInfo.cardId.show, dataIndex: 'address', key: '5', width: 250 },
             {
-                title: dk.phone.show,
+                title: BaseInfo.phone.show,
                 key: 'tags',
                 dataIndex: 'tags',
                 width: 250,
@@ -146,7 +154,7 @@ class PatientPage extends Component<Props> {
         return (
             <Content>
                 <Row type="flex" justify="space-between" style={{height: '100%'}}>
-                    <Col span={this.state.showDetail? 12: 24} className={styles.leftMainCtn}>
+                    <Col span={this.state.showDetail? 10: 24} className={styles.leftMainCtn}>
                         <Row type="flex" justify="end" className={styles.header}>
                             <Tooltip placement="bottomLeft" title={'搜索语法提示'}>
                                 <Search
@@ -164,16 +172,15 @@ class PatientPage extends Component<Props> {
                                 新建
                             </Button>
                         </Row>
-                        <div style={{padding: '10px 8px 10px 8px'}}>
+                        <div style={{padding: '10px 8px 0 8px'}}>
                             {this.renderTable()}
                         </div>
                     </Col>
                     {/* <Divider type="vertical"></Divider> */}
                     {this.state.showDetail && (
-                        <Col span={12} className={styles.rightMainCtn}>
+                        <Col span={14} className={styles.rightMainCtn}>
                             {this.renderDetailHeader()}
-                            {this.renderDetailBasic()}
-                            {this.renderDetailTreatHistory()}
+                            {this.renderDetail()}
                         </Col>
                     )}
                     
@@ -191,7 +198,7 @@ class PatientPage extends Component<Props> {
 
     renderTable() {
         return (
-            <Table columns={this.columns} dataSource={data} scroll={{ x: 1500, y: this.state.windowHeight - 200}}
+            <Table columns={this.columns} dataSource={data} scroll={{ x: 1500, y: this.state.windowHeight - 155}}
              size="small" onSelect={this.onClickShowDetail.bind(this)}
             />
         )
@@ -214,7 +221,7 @@ class PatientPage extends Component<Props> {
         console.log('ssss');
         return (
             <Row className={styles.header}>
-                <Col span={8}>
+                <Col span={16}>
                     {/* <Button size="small" type="danger" shape="circle" icon="close" 
                         onClick={() => this.onClickHideDetail()}
                     /> */}
@@ -224,8 +231,11 @@ class PatientPage extends Component<Props> {
                     <Button type="primary" style={{marginRight: 8}} size="small" icon="save"
                         onClick={() => this.onClickHideDetail()} 
                     >保存</Button>
+                    <Button type="danger" style={{marginRight: 8}} size="small" icon="delete"
+                        onClick={() => this.onClickHideDetail()} 
+                    >删除</Button>
                 </Col>
-                <Col span={16}>
+                <Col span={8}>
                     <Row type="flex" justify="end" >
                         {/* <Tooltip placement="bottomLeft" title={'搜索语法提示'}>
                             <Search
@@ -239,7 +249,7 @@ class PatientPage extends Component<Props> {
                         <Button type="primary" style={{marginRight: 8}} size="small"
                             onClick={() => this.onClickHideDetail()}
                         >
-                            ???
+                           添加病历 
                         </Button>
                     </Row>
                 </Col>
@@ -248,26 +258,27 @@ class PatientPage extends Component<Props> {
         );
     }
 
-    renderDetailBasic() {
+    renderDetail() {
         return (
-            <div className={styles.detailContent} style={{height: 400}}>
+            <div className={styles.detailContent} style={{height: this.state.windowHeight - 60}}>
                 <InputGroup size="small" className={styles.infoRow}>
                     <Col span={8}>
                         <InputGroup compact >
-                            <Input disabled style={{width: '20%'}} defaultValue={dk.id.show} />
-                            <Input style={{width: '80%'}} defaultValue="26888888" />
+                            <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.name.show} />
+                            <Input style={{width: '60%'}} defaultValue="" />
                         </InputGroup>
                     </Col>
                     <Col span={8}>
                         <InputGroup compacts>
-                            <Input disabled style={{width: '20%'}} defaultValue={dk.name.show} />
-                            <Input style={{width: '80%'}} defaultValue="26888888" />
+                            <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.birthDate.show} />
+                            {/* <Input style={{width: '60%'}} defaultValue="" /> */}
+                            <DatePicker style={{width: '60%'}}/>
                         </InputGroup>
                     </Col>
                     <Col span={8}>
                         <InputGroup compact >
-                            <Input disabled style={{width: '30%'}} defaultValue={dk.birthDate.show} />
-                            <Input style={{width: '70%'}} defaultValue="26888888" />
+                            <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.age.show} />
+                            <Input disabled style={{width: '60%'}} defaultValue="24" />
                         </InputGroup>
                     </Col>
                 </InputGroup>
@@ -275,175 +286,144 @@ class PatientPage extends Component<Props> {
                 <InputGroup size="small" className={styles.infoRow}>
                     <Col span={8}>
                         <InputGroup compact >
-                            <Input disabled style={{width: '20%'}} defaultValue={dk.id.show} />
-                            <Input style={{width: '80%'}} defaultValue="26888888" />
+                            <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.id.show} />
+                            <InputNumber size="small" style={{width: '60%'}}/>
                         </InputGroup>
                     </Col>
                     <Col span={8}>
                         <InputGroup compacts>
-                            <Input disabled style={{width: '20%'}} defaultValue={dk.name.show} />
-                            <Input style={{width: '80%'}} defaultValue="26888888" />
+                            <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.cardId.show} />
+                            <Input style={{width: '60%'}} defaultValue="" />
                         </InputGroup>
                     </Col>
                     <Col span={8}>
                         <InputGroup compact >
-                            <Input disabled style={{width: '30%'}} defaultValue={dk.birthDate.show} />
-                            <Input style={{width: '70%'}} defaultValue="26888888" />
+                            <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.phone.show} />
+                            <InputNumber size="small" style={{width: '60%'}}/>
                         </InputGroup>
                     </Col>
                 </InputGroup>
-                {/* <Row >
-                    <InputGroup compact className={styles.infoRow}>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row className={styles.infoRow}>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row className={styles.infoRow}>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row>
-                <Row>
-                    <InputGroup compact>
-                        <Input style={{ width: '20%' }} defaultValue="0571" />
-                        <Input style={{ width: '30%' }} defaultValue="26888888" />
-                    </InputGroup>
-                </Row> */}
+
+                <InputGroup size="small" className={styles.infoRow}>
+                    <Col span={8}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.nation.show} />
+                            <Input style={{width: '60%'}} defaultValue="" />
+                        </InputGroup>
+                    </Col>
+                    <Col span={8}>
+                        <InputGroup compacts>
+                            <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.occupation.show} />
+                            <Input style={{width: '60%'}} defaultValue="" />
+                        </InputGroup>
+                    </Col>
+                    <Col span={8}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.smoking.show} />
+                            {/* <Input style={{width: '60%'}} defaultValue="" /> */}
+                            <Select size="small" style={{width: '60%'}} defaultValue="是">
+                                <Option value="是">是</Option>
+                                <Option value="否">否</Option>
+                            </Select>
+                        </InputGroup>
+                    </Col>
+                </InputGroup>
+
+                <InputGroup size="small" className={styles.infoRow}>
+                    <Col span={6}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '60%'}} defaultValue={BaseInfo.firstMlAge.show} />
+                            <InputNumber size="small" style={{width: '40%'}}/>
+                        </InputGroup>
+                    </Col>
+                    <Col span={6}>
+                        <InputGroup compacts>
+                            <Input disabled style={{width: '60%'}} defaultValue={BaseInfo.pregnantTimes.show} />
+                            <InputNumber size="small" style={{width: '40%'}}/>
+                        </InputGroup>
+                    </Col>
+                    <Col span={6}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '60%'}} defaultValue={BaseInfo.produceChildTimes.show} />
+                            <InputNumber size="small" style={{width: '40%'}}/>
+                        </InputGroup>
+                    </Col>
+                    <Col span={6}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '60%'}} defaultValue={BaseInfo.abortionTimes.show} />
+                            <InputNumber size="small" style={{width: '40%'}}/>
+                        </InputGroup>
+                    </Col>
+                </InputGroup>
+
+                <InputGroup size="small" className={styles.infoRow}>
+                    <Col span={8}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.familyHistory.show} />
+                            <Input style={{width: '60%'}} defaultValue="" />
+                        </InputGroup>
+                    </Col>
+                    <Col span={8}>
+                        <InputGroup compacts>
+                            <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.mlBleeding.show} />
+                            <Select size="small" style={{width: '60%'}} defaultValue="是">
+                                <Option value="是">是</Option>
+                                <Option value="否">否</Option>
+                            </Select>
+                        </InputGroup>
+                    </Col>
+                    <Col span={8}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.contraceptionWay.show} />
+                            <Input style={{width: '60%'}} defaultValue="" />
+                        </InputGroup>
+                    </Col>
+                </InputGroup>
+
+                <InputGroup size="small" className={styles.infoRow}>
+                    <Col span={12}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '20%'}} defaultValue={BaseInfo.diagnose.show} />
+                            <Input style={{width: '80%'}} defaultValue="" />
+                        </InputGroup>
+                    </Col>
+                    <Col span={12}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '20%'}} defaultValue={BaseInfo.other.show} />
+                            <Input style={{width: '80%'}} defaultValue="" />
+                        </InputGroup>
+                    </Col>
+                </InputGroup>       
+                {/* <br /> */}
+                {this.renderDetailTreatHistory()}
             </div>
         )
     }
 
     renderDetailTreatHistory() {
         return (
-            <div></div>
-        )
+            <div className={styles.infoRow} style={{marginTop: 8}}>
+                <Collapse defaultActiveKey={[]} onChange={this.cb_TreatCollapse}>
+                    {this.renderTreat()}
+                    {this.renderTreat()}
+                </Collapse>
+            </div>
+        );
+    }
+
+    cb_TreatCollapse = () => {
+
+    }
+
+    
+
+    renderTreat() {
+        var text = "12121212";
+        return (
+            <Panel style={customPanelStyle} header="病历 2018-11-05">
+                <p>{text}</p>
+            </Panel>
+        );
     }
 }
 

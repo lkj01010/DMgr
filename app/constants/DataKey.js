@@ -1,4 +1,4 @@
-export default {
+export const BaseInfo = {
     id: {
         show: "ID"
     },
@@ -36,7 +36,7 @@ export default {
         show: "吸烟史",
     },
     firstMlAge: {
-        show: "初次性爱年龄",
+        show: "初次年龄",
     },
     pregnantTimes: {
         show: "怀孕次数",
@@ -44,6 +44,20 @@ export default {
     produceChildTimes: {
         show: "生产次数",
     },
-
+    abortionTimes: {
+        show: "流产次数",
+    },
+    familyHistory: {
+        show: "家族史",
+    },
+    mlBleeding: {
+        show: "同房出血",
+    },
+    contraceptionWay: {
+        show: "避孕方式",
+    },
+    other: {
+        show: "其他",
+    },
 
 }
