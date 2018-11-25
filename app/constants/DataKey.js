@@ -60,4 +60,161 @@ export const BaseInfo = {
         show: "其他",
     },
 
+};
+
+export const OutpatientInfo = {
+    date: {
+        show: "门诊日期",
+    },
+
+    cytology: {
+        show: "细胞学",
+    },
+    cytology_date: {
+        show: "时间",
+    },
+    cytology_from: {
+        show: "来源",
+    },
+    cytology_report: {
+        show: "报告",
+    },
+
+    HPV: {
+        show: "HPV",
+    },
+    HPV_date: {
+        show: "时间",
+    },
+    HPV_from: {
+        show: "来源",
+    },
+    HPV_report: {
+        show: "报告",
+    },
+
+    imaging: {
+        show: "影像学",
+    },
+    imaging_date: {
+        show: "时间",
+    },
+    imaging_from: {
+        show: "来源",
+    },
+    imaging_report: {
+        show: "报告",
+    },
+    imaging_id: {
+        show: "编号",
+    },
+
+    colposcopy: {
+        show: "阴道镜",
+    },
+
+    histology: {
+        show: "组织学",
+    },
+    histology_date: {
+        show: "时间",
+    },
+    histology_from: {
+        show: "来源",
+    },
+    histology_report: {
+        show: "报告",
+    },
+    histology_id: {
+        show: "编号",
+    },
+    
+    treat: {
+        show: "治疗",
+    },
+}
+
+export const Colposcocy = {
+    date: {
+        show: "检查日期",
+    },
+    cervixExpose: {
+        show: "宫颈暴露",
+    },
+    conversionAreaType: {
+        show: "转换区类型",
+    },
+    vinegarWhite: {
+        show: "醋白",
+    },
+    glandCleft: {
+        show: "腺体开口",
+    },
+    vessel: {
+        show: "血管",
+    },
+    inlay: {
+        show: "镶嵌",
+    },
+    unusualVessel: {
+        show: "异型血管",
+    },
+    iodine: {
+        show: "碘染",
+    },
+    vagina: {
+        show: "阴道",
+    },
+    vulva: {
+        show: "外阴",
+    },
+    microscopicImage: {
+        show: "镜下印象",
+    },
+};
+
+export const Treat = {
+    date: {
+        show: "治疗日期",
+    },
+    type: {
+        show: "治疗方式",
+    },
+
+    laser: {
+        show: "激光",
+    },
+    laser_place: {
+        show: "部位",
+    },
+    laser_area: {
+        show: "面积",
+    },
+    laser_other: {
+        show: "其他",
+    },
+    
+    LEEP: {
+        show: "LEEP",
+    },
+    LEEP_1_length: {
+        show: "长度",
+    },
+    LEEP_1_diameter: {
+        show: "周径",
+    },
+    LEEP_1_thickness: {
+        show: "厚度",
+    },
+
+    LEEP_2: {
+        show: "第二刀",
+    },
+    LEEP_other: {
+        show: "其他",
+    },
+    
+    other: {
+        show: "其他",
+    }
 }

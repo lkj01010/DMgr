@@ -14,7 +14,7 @@ const Option = Select.Option;
 const Panel = Collapse.Panel;
 
 import styles from './PatientPage.css';
-import {BaseInfo} from '../constants/Datakey';
+import {BaseInfo, OutpatientInfo, Colposcocy, Treat} from '../constants/Datakey';
 
 
 type Props = {};
@@ -22,7 +22,6 @@ type Props = {};
 type State = {
     showDetail: boolean;
 };
-
 
 
 const data = [{
@@ -87,8 +86,15 @@ const data = [{
     tags: ['cool', 'teacher'],
 }];
 
-const customPanelStyle = {
-    background: '#ebf4fa',
+const OutPatientPanelStyle = {
+    background: '#e0f3ff',
+    // borderRadius: 4,
+    // marginBottom: 8,
+    // overflow: 'hidden'
+};
+
+const InnerPanelStyle = {
+    background: '#f0f0f0',
     // borderRadius: 4,
     // marginBottom: 8,
     // overflow: 'hidden'
@@ -321,7 +327,7 @@ class PatientPage extends Component<Props> {
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.smoking.show} />
                             {/* <Input style={{width: '60%'}} defaultValue="" /> */}
-                            <Select size="small" style={{width: '60%'}} defaultValue="是">
+                            <Select size="small" style={{width: '60%'}} defaultValue="">
                                 <Option value="是">是</Option>
                                 <Option value="否">否</Option>
                             </Select>
@@ -366,7 +372,7 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compacts>
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.mlBleeding.show} />
-                            <Select size="small" style={{width: '60%'}} defaultValue="是">
+                            <Select size="small" style={{width: '60%'}} defaultValue="">
                                 <Option value="是">是</Option>
                                 <Option value="否">否</Option>
                             </Select>
@@ -404,8 +410,8 @@ class PatientPage extends Component<Props> {
         return (
             <div className={styles.infoRow} style={{marginTop: 8}}>
                 <Collapse defaultActiveKey={[]} onChange={this.cb_TreatCollapse}>
-                    {this.renderTreat()}
-                    {this.renderTreat()}
+                    {this.renderOutpatient()}
+                    {this.renderOutpatient()}
                 </Collapse>
             </div>
         );
@@ -415,13 +421,386 @@ class PatientPage extends Component<Props> {
 
     }
 
+    renderOutpatient() {
+        return (
+            <Panel style={OutPatientPanelStyle} header="病历 2018-11-05">
+
+                <InputGroup size="small" className={styles.infoRow}>
+                    <DatePicker style={{width: '20%'}}/>
+                </InputGroup>
+
+                <Row>
+                    <Col span={2} style={{marginTop: 5}}>
+                        {OutpatientInfo.cytology.show}
+                    </Col>
+                    <Col span={22}>
+                        <InputGroup size="small" className={styles.infoRow}>
+                            <Col span={6}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '30%'}} defaultValue={OutpatientInfo.cytology_date.show} />
+                                    <DatePicker style={{width: '70%'}}/>
+                                </InputGroup>
+                            </Col>
+                            <Col span={5}>
+                                <InputGroup compacts>
+                                    <Input disabled style={{width: '50%'}} defaultValue={OutpatientInfo.cytology_from.show} />
+                                    <Select size="small" style={{width: '50%'}} defaultValue="">
+                                        <Option value="本院">本院</Option>
+                                        <Option value="外院">外院</Option>
+                                    </Select>
+                                </InputGroup>
+                            </Col>
+                            <Col span={13}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '15%'}} defaultValue={OutpatientInfo.cytology_report.show} />
+                                    <Input style={{width: '85%'}} defaultValue="" />
+                                </InputGroup>
+                            </Col>
+                        </InputGroup>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col span={2} style={{marginTop: 5}}>
+                        {OutpatientInfo.HPV.show}
+                    </Col>
+                    <Col span={22}>
+                        <InputGroup size="small" className={styles.infoRow}>
+                            <Col span={6}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '30%'}} defaultValue={OutpatientInfo.HPV_date.show} />
+                                    <DatePicker style={{width: '70%'}}/>
+                                </InputGroup>
+                            </Col>
+                            <Col span={5}>
+                                <InputGroup compacts>
+                                    <Input disabled style={{width: '50%'}} defaultValue={OutpatientInfo.HPV_from.show} />
+                                    <Select size="small" style={{width: '50%'}} defaultValue="">
+                                        <Option value="本院">本院</Option>
+                                        <Option value="外院">外院</Option>
+                                    </Select>
+                                </InputGroup>
+                            </Col>
+                            <Col span={13}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '15%'}} defaultValue={OutpatientInfo.HPV_report.show} />
+                                    <Input style={{width: '85%'}} defaultValue="" />
+                                </InputGroup>
+                            </Col>
+                        </InputGroup>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col span={2} style={{marginTop: 5}}>
+                        {OutpatientInfo.imaging.show}
+                    </Col>
+                    <Col span={22}>
+                        <InputGroup size="small" className={styles.infoRow}>
+                            <Col span={6}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '30%'}} defaultValue={OutpatientInfo.imaging_date.show} />
+                                    <DatePicker style={{width: '70%'}}/>
+                                </InputGroup>
+                            </Col>
+                            <Col span={5}>
+                                <InputGroup compacts>
+                                    <Input disabled style={{width: '50%'}} defaultValue={OutpatientInfo.imaging_from.show} />
+                                    <Select size="small" style={{width: '50%'}} defaultValue="">
+                                        <Option value="本院">本院</Option>
+                                        <Option value="外院">外院</Option>
+                                    </Select>
+                                </InputGroup>
+                            </Col>
+                            <Col span={5}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '30%'}} defaultValue={OutpatientInfo.imaging_id.show} />
+                                    <Input style={{width: '70%'}} defaultValue="" />
+                                </InputGroup>
+                            </Col>
+                            <Col span={8}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '20%'}} defaultValue={OutpatientInfo.imaging_report.show} />
+                                    <Input style={{width: '80%'}} defaultValue="" />
+                                </InputGroup>
+                            </Col>
+                        </InputGroup>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col span={2} style={{marginTop: 5}}>
+                        {OutpatientInfo.histology.show}
+                    </Col>
+                    <Col span={22}>
+                        <InputGroup size="small" className={styles.infoRow}>
+                            <Col span={6}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '30%'}} defaultValue={OutpatientInfo.histology_date.show} />
+                                    <DatePicker style={{width: '70%'}}/>
+                                </InputGroup>
+                            </Col>
+                            <Col span={5}>
+                                <InputGroup compacts>
+                                    <Input disabled style={{width: '50%'}} defaultValue={OutpatientInfo.histology_from.show} />
+                                    <Select size="small" style={{width: '50%'}} defaultValue="">
+                                        <Option value="本院">本院</Option>
+                                        <Option value="外院">外院</Option>
+                                    </Select>
+                                </InputGroup>
+                            </Col>
+                            <Col span={5}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '30%'}} defaultValue={OutpatientInfo.histology_id.show} />
+                                    <Input style={{width: '70%'}} defaultValue="" />
+                                </InputGroup>
+                            </Col>
+                            <Col span={8}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '20%'}} defaultValue={OutpatientInfo.histology_report.show} />
+                                    <Input style={{width: '80%'}} defaultValue="" />
+                                </InputGroup>
+                            </Col>
+                        </InputGroup>
+                    </Col>
+                </Row>
+
+                <Collapse defaultActiveKey={[]} onChange={this.cb_TreatCollapse}style={{marginTop: 16}}>
+                    {this.renderColposcocy()}
+                    {this.renderTreat()}
+                </Collapse>
+            </Panel>
+        );
+    }
     
 
-    renderTreat() {
+    renderColposcocy() {
         var text = "12121212";
         return (
-            <Panel style={customPanelStyle} header="病历 2018-11-05">
-                <p>{text}</p>
+            <Panel style={InnerPanelStyle} header="阴道镜">
+
+                <InputGroup size="small" className={styles.infoRow}>
+                    <DatePicker style={{width: '20%'}}/>
+                </InputGroup>
+
+                <InputGroup size="small" className={styles.infoRow}>
+                    {/* <Col span={8}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '40%'}} defaultValue={Colposcocy.date.show} />
+                            <DatePicker style={{width: '60%'}}/>
+                        </InputGroup>
+                    </Col> */}
+                    <Col span={8}>
+                        <InputGroup compacts>
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.cervixExpose.show} />
+                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                                <Option value="充分">充分</Option>
+                                <Option value="不充分">不充分</Option>
+                            </Select>
+                        </InputGroup>
+                    </Col>
+                    <Col span={8}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.conversionAreaType.show} />
+                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                                <Option value="type1">Ⅰ型</Option>
+                                <Option value="type2">Ⅱ型</Option>
+                                <Option value="type3">Ⅲ型</Option>
+                            </Select>
+                        </InputGroup>
+                    </Col>
+                </InputGroup>
+
+                <InputGroup size="small" className={styles.infoRow}>
+                    <Col span={8}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.vinegarWhite.show} />
+                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                                <Option value="厚">厚</Option>
+                                <Option value="薄">薄</Option>
+                                <Option value="无">无</Option>
+                            </Select>
+                        </InputGroup>
+                    </Col>
+                    <Col span={8}>
+                        <InputGroup compacts>
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.glandCleft.show} />
+                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                                <Option value="低级别">低级别</Option>
+                                <Option value="高级别">高级别</Option>
+                            </Select>
+                        </InputGroup>
+                    </Col>
+                    <Col span={8}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.vessel.show} />
+                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                                <Option value="细点状">细点状</Option>
+                                <Option value="粗点状">粗点状</Option>
+                            </Select>
+                        </InputGroup>
+                    </Col>
+                </InputGroup>
+
+                <InputGroup size="small" className={styles.infoRow}>
+                    <Col span={8}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.inlay.show} />
+                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                                <Option value="粗">粗</Option>
+                                <Option value="细">细</Option>
+                            </Select>
+                        </InputGroup>
+                    </Col>
+                    <Col span={8}>
+                        <InputGroup compacts>
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.unusualVessel.show} />
+                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                                <Option value="有">有</Option>
+                                <Option value="无">无</Option>
+                            </Select>
+                        </InputGroup>
+                    </Col>
+                    <Col span={8}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.iodine.show} />
+                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                                <Option value="着色">着色</Option>
+                                <Option value="不着色">不着色</Option>
+                            </Select>
+                        </InputGroup>
+                    </Col>
+                </InputGroup>
+
+                <InputGroup size="small" className={styles.infoRow}>
+                    <Col span={8}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '20%'}} defaultValue={Colposcocy.vagina.show} />
+                            <Input style={{width: '80%'}} defaultValue="" />
+                        </InputGroup>
+                    </Col>
+                    <Col span={8}>
+                        <InputGroup compacts>
+                            <Input disabled style={{width: '20%'}} defaultValue={Colposcocy.vulva.show} />
+                            <Input style={{width: '80%'}} defaultValue="" />
+                        </InputGroup>
+                    </Col>
+                    <Col span={8}>
+                        <InputGroup compact >
+                            <Input disabled style={{width: '30%'}} defaultValue={Colposcocy.microscopicImage.show} />
+                            <Input style={{width: '70%'}} defaultValue="" />
+                        </InputGroup>
+                    </Col>
+                </InputGroup>
+            </Panel>
+        );
+    }
+    
+    renderTreat() {
+        return (
+            <Panel style={InnerPanelStyle} header="治疗">
+                <InputGroup size="small" className={styles.infoRow}>
+                    <DatePicker style={{width: '20%'}}/>
+                </InputGroup>
+
+                <Row>
+                    <Col span={2} style={{paddingTop: 5}}>
+                        {Treat.laser.show}
+                    </Col>
+                    <Col span={22}>
+                        <InputGroup size="small" className={styles.infoRow}>
+                            <Col span={8}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '30%'}} defaultValue={Treat.laser_place.show} />
+                                    <Input style={{width: '70%'}} defaultValue="" />
+                                </InputGroup>
+                            </Col>
+                            <Col span={8}>
+                                <InputGroup compacts>
+                                    <Input disabled style={{width: '30%'}} defaultValue={Treat.laser_area.show} />
+                                    <Input style={{width: '70%'}} defaultValue="" />
+                                </InputGroup>
+                            </Col>
+                            <Col span={8}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '30%'}} defaultValue={Treat.laser_other.show} />
+                                    <Input style={{width: '70%'}} defaultValue="" />
+                                </InputGroup>
+                            </Col>
+                        </InputGroup>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col span={2} style={{marginTop: 5}}>
+                        {Treat.LEEP.show}
+                    </Col>
+                    <Col span={22}>
+                        <InputGroup size="small" className={styles.infoRow}>
+                            <Col span={8}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '30%'}} defaultValue={Treat.LEEP_1_length.show} />
+                                    <Input style={{width: '70%'}} defaultValue="" addonAfter="cm"/>
+                                </InputGroup>
+                            </Col>
+                            <Col span={8}>
+                                <InputGroup compacts>
+                                    <Input disabled style={{width: '30%'}} defaultValue={Treat.LEEP_1_diameter.show} />
+                                    <Input style={{width: '70%'}} defaultValue="" addonAfter="cm"/>
+                                </InputGroup>
+                            </Col>
+                            <Col span={8}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '30%'}} defaultValue={Treat.LEEP_1_thickness.show} />
+                                    <Input style={{width: '70%'}} defaultValue="" addonAfter="cm"/>
+                                </InputGroup>
+                            </Col>
+                        </InputGroup>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col span={2} >
+                    </Col>
+                    <Col span={22}>
+                        <InputGroup size="small" className={styles.infoRow}>
+                            <Col span={24}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '20%'}} defaultValue={Treat.LEEP_2.show} />
+                                    <Input style={{width: '80%'}} defaultValue="" />
+                                </InputGroup>
+                            </Col>
+                        </InputGroup>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col span={2} >
+                    </Col>
+                    <Col span={22}>
+                        <InputGroup size="small" className={styles.infoRow}>
+                            <Col span={24}>
+                                <InputGroup compact >
+                                    <Input disabled style={{width: '20%'}} defaultValue={Treat.LEEP_other.show} />
+                                    <Input style={{width: '80%'}} defaultValue="" />
+                                </InputGroup>
+                            </Col>
+                        </InputGroup>
+                    </Col>
+                </Row>
+                
+                <Row>
+                    <Col span={2} >{Treat.other.show}
+                    </Col>
+                    <Col span={22}>
+                        <InputGroup size="small" className={styles.infoRow}>
+                            <Col span={24}>
+                                    <Input style={{width: '100%'}} defaultValue="" />
+                            </Col>
+                        </InputGroup>
+                    </Col>
+                </Row>
+               
             </Panel>
         );
     }
