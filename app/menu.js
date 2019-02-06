@@ -16,10 +16,12 @@ export default class MenuBuilder {
       this.setupDevelopmentEnvironment();
     }
 
-    const template =
-      process.platform === 'darwin'
-        ? this.buildDarwinTemplate()
-        : this.buildDefaultTemplate();
+    // const template =
+    //   process.platform === 'darwin'
+    //     ? this.buildDarwinTemplate()
+    //     : this.buildDefaultTemplate();
+
+    const template = this.buildMyTemplate();
 
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
@@ -41,6 +43,20 @@ export default class MenuBuilder {
         }
       ]).popup(this.mainWindow);
     });
+  }
+
+  buildMyTemplate() {
+      return [
+        {
+            label: 'About',
+            submenu: [
+                {
+                  label: '关于医疗记事本',
+                  selector: 'orderFrontStandardAboutPanel:'
+                },
+            ],
+        }
+      ]
   }
 
   buildDarwinTemplate() {

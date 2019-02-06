@@ -69,8 +69,8 @@ app.on('ready', async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 700,
-    height: 800, 
+    width: 1400,
+    height: 640, 
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -98,5 +98,5 @@ app.on('ready', async () => {
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
-  new AppUpdater();
+  // new AppUpdater();
 });
