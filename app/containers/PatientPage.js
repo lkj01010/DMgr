@@ -1,9 +1,13 @@
 // @flow
 import React, { Component } from 'react';
-import connectComponent from '../utils/connectComponent';
 import { Button, Layout, Menu, Breadcrumb, Icon, Row, Col, Divider, Input,
     Tooltip, Table, Tag, Select, InputNumber, DatePicker, Collapse,
 } from 'antd';
+import connectComponent from '../utils/connectComponent';
+
+import styles from './PatientPage.css';
+import {BaseInfo, OutpatientInfo, Colposcocy, Treat} from '../constants/Datakey';
+import {PatientInfo, PatientBaseInfo} from "../constants/DateTypes";
 
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
@@ -13,77 +17,63 @@ const InputGroup = Input.Group;
 const Option = Select.Option;
 const Panel = Collapse.Panel;
 
-import styles from './PatientPage.css';
-import {BaseInfo, OutpatientInfo, Colposcocy, Treat} from '../constants/Datakey';
+// ////////////////////////////////////////////////
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
+
+const adapter = new FileSync('db.json')
+const db = low(adapter)
+
+db.defaults({ posts: [] })
+  .write()
+
+const result = db.get('posts')
+  .push({ title: 123 })
+  .write()
+
+console.log(result)
+
+// ////////////////////////////////////////////////
 
 
-type Props = {};
+
+
+type Props = {
+	actions: any,
+    patientList: Array<PatientInfo>
+};
 
 type State = {
-    showDetail: boolean;
+    showDetail: boolean,
+
+    curPatientInfo: PatientInfo
 };
 
 
 const data = [{
-    key: '1',
-    name: 'Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
+    base: {
+        key: '1',
+        id: '2910ss',
+        name: 'Brown',
+        age: 32,
+        firstDiagnose: '123y22m',
+        lastDiagnose: '123y22m',
+        cardId: '232993002',
+        phone: '239392111111',
+        tags: ['nice', 'developer'],
+    }
 }, {
-    key: '2',
-    firstName: 'Jim',
-    name: 'Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-}, {
-    key: '3',
-    firstName: 'Joe',
-    name: 'Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-},{
-    key: '4',
-    name: 'Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-}, {
-    key: '5',
-    firstName: 'Jim',
-    name: 'Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-}, {
-    key: '6',
-    firstName: 'Joe',
-    name: 'Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-},{
-    key: '7',
-    name: 'Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-}, {
-    key: '8',
-    firstName: 'Jim',
-    name: 'Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-}, {
-    key: '9',
-    firstName: 'Joe',
-    name: 'Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
+    base: {
+        key: '1',
+        id: '2910ss',
+        name: 'Brown',
+        age: 32,
+        firstDiagnose: '123y22m',
+        lastDiagnose: '123y22m',
+        cardId: '232993002',
+        phone: '239392111111',
+        tags: ['nice', 'developer'],
+    }
 }];
 
 const OutPatientPanelStyle = {
@@ -102,9 +92,10 @@ const InnerPanelStyle = {
 
 class PatientPage extends Component<Props> {
     props: Props;
+
     state: State;
 
-    
+
     constructor(props: Props) {
         super(props);
 
@@ -114,46 +105,46 @@ class PatientPage extends Component<Props> {
         };
 
         this.columns = [
-            { title: BaseInfo.id.show, width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
-            { title: BaseInfo.name.show, width: 100, dataIndex: 'age', key: 'age', fixed: 'left' },
-            { title: BaseInfo.age.show, dataIndex: 'address', key: '1', width: 250 },
-            { title: BaseInfo.firstDiagnose.show, dataIndex: 'address', key: '3', width: 250 },
-            { title: BaseInfo.lastDiagnose.show, dataIndex: 'address', key: '4', width: 250 },
-            { title: BaseInfo.cardId.show, dataIndex: 'address', key: '5', width: 250 },
-            {
-                title: BaseInfo.phone.show,
-                key: 'tags',
-                dataIndex: 'tags',
-                width: 250,
-                render: tags => (
-                    <span>
-                    {tags.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
-                    </span>
-                ),
-            },
+            { title: BaseInfo.id.show, width: 100, dataIndex: 'base.id', key: 'id', fixed: 'left' },
+            { title: BaseInfo.name.show, width: 100, dataIndex: 'base.name', key: 'name', fixed: 'left' },
+            { title: BaseInfo.age.show, width: 70, dataIndex: 'base.age', key: 'age', fixed: 'left' },
+            { title: BaseInfo.firstDiagnose.show, width: 150, dataIndex: 'base.firstDiagnose', key: 'firstDiagnose'},
+            { title: BaseInfo.lastDiagnose.show, width: 150, dataIndex: 'base.lastDiagnose', key: 'lastDiagnose'},
+            { title: BaseInfo.cardId.show, width: 200, dataIndex: 'base.cardId', key: 'cardId'},
+            { title: BaseInfo.phone.show, dataIndex: 'base.phone', key: 'phone'},
+            // {
+            //     title: 'Tags',
+            //     key: 'tags',
+            //     dataIndex: 'tags',
+            //     width: 250,
+            //     render: tags => (
+            //         <span>
+            //         {tags.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
+            //         </span>
+            //     ),
+            // },
             {
                 title: '操作',
                 dataIndex: 'operation',
                 width: 50,
                 fixed: 'right',
-                render: (text, record) => {
-                    return (
+                render: (text, record) => (
                         <a href="javascript:;" onClick={() => {
                             this.onClickShowDetail(record.key);
                         }}>详细</a>
-                    ); 
-                },
+                    ),
             }
         ];
 
         // tofix: implement in main process
         window.onresize = () => {
-            console.log('h=' + window.innerHeight);
+            console.log(`h=${  window.innerHeight}`);
             this.setState({
                 windowHeight: window.innerHeight,
+                windowWidth: window.innerWidth,
             })
         }
-    
+
     }
 
     render() {
@@ -162,14 +153,14 @@ class PatientPage extends Component<Props> {
                 <Row type="flex" justify="space-between" style={{height: '100%'}}>
                     <Col span={this.state.showDetail? 10: 24} className={styles.leftMainCtn}>
                         <Row type="flex" justify="end" className={styles.header}>
-                            <Tooltip placement="bottomLeft" title={'搜索语法提示'}>
+                            <Tooltip placement="bottomLeft" title="搜索语法提示">
                                 <Search
                                     style={{marginRight: 16, width: 200}}
                                     placeholder="id搜索"
                                     onSearch={value => console.log(value)}
                                     enterButton
                                     size="small"
-                                    
+
                                 />
                             </Tooltip>
                             <Button type="primary" style={{marginRight: 8}} size="small"
@@ -189,22 +180,25 @@ class PatientPage extends Component<Props> {
                             {this.renderDetail()}
                         </Col>
                     )}
-                    
+
                 </Row>
             </Content>
-            
+
         )
     }
 
     newPatient() {
         console.log('haha');
         const {actions} = this.props;
-        actions.pa_getPatientList();
+        patient: PatientInfo = {};
+        actions.pa_newPatientInfo();
     }
 
     renderTable() {
         return (
-            <Table columns={this.columns} dataSource={data} scroll={{ x: 1500, y: this.state.windowHeight - 155}}
+            <Table columns={this.columns} dataSource={data} 
+            scroll={{x: 1000,
+            y: this.state.windowHeight - 155}} bordered
              size="small" onSelect={this.onClickShowDetail.bind(this)}
             />
         )
@@ -225,20 +219,21 @@ class PatientPage extends Component<Props> {
 
     renderDetailHeader() {
         console.log('ssss');
+        
         return (
             <Row className={styles.header}>
-                <Col span={16}>
-                    {/* <Button size="small" type="danger" shape="circle" icon="close" 
+                <Col span={16}>``
+                    {/* <Button size="small" type="danger" sha`pe="circle" icon="close"
                         onClick={() => this.onClickHideDetail()}
                     /> */}
                     <Button style={{marginRight: 8}} size="small" icon="menu-fold"
                         onClick={() => this.onClickHideDetail()}
                     >关闭</Button>
                     <Button type="primary" style={{marginRight: 8}} size="small" icon="save"
-                        onClick={() => this.onClickHideDetail()} 
+                        onClick={() => this.onClickHideDetail()}
                     >保存</Button>
                     <Button type="danger" style={{marginRight: 8}} size="small" icon="delete"
-                        onClick={() => this.onClickHideDetail()} 
+                        onClick={() => this.onClickHideDetail()}
                     >删除</Button>
                 </Col>
                 <Col span={8}>
@@ -255,23 +250,25 @@ class PatientPage extends Component<Props> {
                         <Button type="primary" style={{marginRight: 8}} size="small"
                             onClick={() => this.onClickHideDetail()}
                         >
-                           添加病历 
+                           添加病历
                         </Button>
                     </Row>
                 </Col>
             </Row>
-            
+
         );
     }
 
     renderDetail() {
+        const {actions, selPatientInfo} = this.props;
+        const {base: PatientBaseInfo} = selPatientInfo;
         return (
             <div className={styles.detailContent} style={{height: this.state.windowHeight - 60}}>
                 <InputGroup size="small" className={styles.infoRow}>
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.name.show} />
-                            <Input style={{width: '60%'}} defaultValue="" />
+                            <Input style={{width: '60%'}} defaultValue="" value={base.name}/>
                         </InputGroup>
                     </Col>
                     <Col span={8}>
@@ -399,7 +396,7 @@ class PatientPage extends Component<Props> {
                             <Input style={{width: '80%'}} defaultValue="" />
                         </InputGroup>
                     </Col>
-                </InputGroup>       
+                </InputGroup>
                 {/* <br /> */}
                 {this.renderDetailTreatHistory()}
             </div>
@@ -572,10 +569,10 @@ class PatientPage extends Component<Props> {
             </Panel>
         );
     }
-    
+
 
     renderColposcocy() {
-        var text = "12121212";
+        const text = "12121212";
         return (
             <Panel style={InnerPanelStyle} header="阴道镜">
 
@@ -695,7 +692,7 @@ class PatientPage extends Component<Props> {
             </Panel>
         );
     }
-    
+
     renderTreat() {
         return (
             <Panel style={InnerPanelStyle} header="治疗">
@@ -760,8 +757,7 @@ class PatientPage extends Component<Props> {
                 </Row>
 
                 <Row>
-                    <Col span={2} >
-                    </Col>
+                    <Col span={2}  />
                     <Col span={22}>
                         <InputGroup size="small" className={styles.infoRow}>
                             <Col span={24}>
@@ -775,8 +771,7 @@ class PatientPage extends Component<Props> {
                 </Row>
 
                 <Row>
-                    <Col span={2} >
-                    </Col>
+                    <Col span={2}  />
                     <Col span={22}>
                         <InputGroup size="small" className={styles.infoRow}>
                             <Col span={24}>
@@ -788,7 +783,7 @@ class PatientPage extends Component<Props> {
                         </InputGroup>
                     </Col>
                 </Row>
-                
+
                 <Row>
                     <Col span={2} >{Treat.other.show}
                     </Col>
@@ -800,19 +795,22 @@ class PatientPage extends Component<Props> {
                         </InputGroup>
                     </Col>
                 </Row>
-               
+
             </Panel>
         );
     }
 }
 
 function mapStateToProps(state) {
+    const {patient} = state;
+    const {patientInfoList, selPatientInfo} = patient;
     return {
-        
+        patientInfoList,
+        selPatientInfo,
     };
 }
-  
+
 export default connectComponent({
-    mapStateToProps, 
+    mapStateToProps,
     LayoutComponent: PatientPage,
 });

@@ -9,3 +9,13 @@ export const pa_getPatientList = createAction(at.PA_GET_PATIENT_LIST, () => {
         },
 	};
 });
+
+export const pa_savePatientInfo = createAction(at.PA_SAVE_PATIENT_INFO, () => {
+	return {
+	};
+});
+
+export const pa_newPatientInfo = createAction(at.PA_NEW_PATIENT_INFO, () => {
+	return {
+	};
+});
