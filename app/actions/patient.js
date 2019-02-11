@@ -19,3 +19,7 @@ export const pa_newPatientInfo = createAction(at.PA_NEW_PATIENT_INFO, () => {
 	return {
 	};
 });
+
+export const pa_editSelPatientBase = createAction(at.PA_EDIT_SEL_PATIENT_BASE, (data) => {
+	return data;
+})

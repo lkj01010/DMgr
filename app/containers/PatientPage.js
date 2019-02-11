@@ -51,8 +51,8 @@ type State = {
 
 
 const data = [{
+    key: '1',
     base: {
-        key: '1',
         id: '2910ss',
         name: 'Brown',
         age: 32,
@@ -63,8 +63,8 @@ const data = [{
         tags: ['nice', 'developer'],
     }
 }, {
+    key: '2',
     base: {
-        key: '1',
         id: '2910ss',
         name: 'Brown',
         age: 32,
@@ -190,8 +190,10 @@ class PatientPage extends Component<Props> {
     newPatient() {
         console.log('haha');
         const {actions} = this.props;
-        patient: PatientInfo = {};
         actions.pa_newPatientInfo();
+        this.setState({
+            showDetail: true,
+        });
     }
 
     renderTable() {
@@ -222,7 +224,7 @@ class PatientPage extends Component<Props> {
         
         return (
             <Row className={styles.header}>
-                <Col span={16}>``
+                <Col span={16}>
                     {/* <Button size="small" type="danger" sha`pe="circle" icon="close"
                         onClick={() => this.onClickHideDetail()}
                     /> */}
@@ -261,14 +263,21 @@ class PatientPage extends Component<Props> {
 
     renderDetail() {
         const {actions, selPatientInfo} = this.props;
-        const {base: PatientBaseInfo} = selPatientInfo;
+        if (selPatientInfo == null) {
+            return;
+        }
+        const {base} = selPatientInfo;
         return (
             <div className={styles.detailContent} style={{height: this.state.windowHeight - 60}}>
                 <InputGroup size="small" className={styles.infoRow}>
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.name.show} />
-                            <Input style={{width: '60%'}} defaultValue="" value={base.name}/>
+                            <Input style={{width: '60%'}} defaultValue="" value={base.name} onChange={(e) => {
+                                actions.pa_editSelPatientBase({
+                                    name: e.target.value,
+                                });
+                            }}/>
                         </InputGroup>
                     </Col>
                     <Col span={8}>
