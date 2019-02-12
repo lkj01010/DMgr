@@ -9,6 +9,8 @@ import styles from './PatientPage.css';
 import {BaseInfo, OutpatientInfo, Colposcocy, Treat} from '../constants/Datakey';
 import {PatientInfo, PatientBaseInfo} from "../constants/DateTypes";
 
+import moment from 'moment'
+
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -16,6 +18,7 @@ const Search = Input.Search;
 const InputGroup = Input.Group;
 const Option = Select.Option;
 const Panel = Collapse.Panel;
+
 
 // ////////////////////////////////////////////////
 const low = require('lowdb')
@@ -284,13 +287,23 @@ class PatientPage extends Component<Props> {
                         <InputGroup compacts>
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.birthDate.show} />
                             {/* <Input style={{width: '60%'}} defaultValue="" /> */}
-                            <DatePicker style={{width: '60%'}}/>
+                            <DatePicker style={{width: '60%'}} onChange={
+                                (date, dateString) => {
+                                    console.log(date, dateString);
+                                    let age = moment().diff(date, 'years');
+                                    console.log('age=' + age);
+                                    actions.pa_editSelPatientBase({
+                                        birthDate: dateString,
+                                        age,
+                                    });
+                                }
+                            }/>
                         </InputGroup>
                     </Col>
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.age.show} />
-                            <Input disabled style={{width: '60%'}} defaultValue="24" />
+                            <Input disabled style={{width: '60%'}} defaultValue="24" value={base.age}/>
                         </InputGroup>
                     </Col>
                 </InputGroup>
@@ -299,7 +312,11 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.id.show} />
-                            <InputNumber size="small" style={{width: '60%'}}/>
+                            <Input size="small" style={{width: '60%'}} value={base.id} onChange={(e) => {
+                                    actions.pa_editSelPatientBase({
+                                        id: e.target.value,
+                                    });
+                                }}/>
                         </InputGroup>
                     </Col>
                     <Col span={8}>
@@ -311,7 +328,11 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.phone.show} />
-                            <InputNumber size="small" style={{width: '60%'}}/>
+                            <InputNumber size="small" style={{width: '60%'}} value={base.phone} onChange={(v) => {
+                                    actions.pa_editSelPatientBase({
+                                        phone: v,
+                                    });
+                                }}/>
                         </InputGroup>
                     </Col>
                 </InputGroup>
@@ -320,7 +341,13 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.nation.show} />
-                            <Input style={{width: '60%'}} defaultValue="" />
+                            <Input style={{width: '60%'}} defaultValue="" 
+                                value={base.nation} onChange={(e) => {
+                                    actions.pa_editSelPatientBase({
+                                        nation: e.target.value,
+                                    });
+                                }}
+                            />
                         </InputGroup>
                     </Col>
                     <Col span={8}>
