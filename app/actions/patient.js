@@ -10,7 +10,7 @@ export const pa_getPatientList = createAction(at.PA_GET_PATIENT_LIST, () => {
 	};
 });
 
-export const pa_savePatientInfo = createAction(at.PA_SAVE_PATIENT_INFO, () => {
+export const pa_savePatientInfo = createAction(at.PA_SEL_PATIENT_SAVE, () => {
 	return {
 	};
 });
@@ -20,19 +20,19 @@ export const pa_newPatientInfo = createAction(at.PA_NEW_PATIENT_INFO, () => {
 	};
 });
 
-export const pa_editSelPatientBase = createAction(at.PA_EDIT_SEL_PATIENT_BASE, (data) => {
+export const pa_editSelPatientBase = createAction(at.PA_SEL_PATIENT_EDIT_BASE, (data) => {
 	return data;
 });
 
-export const pa_editSelPatientOutPatient = createAction(at.PA_EDIT_SEL_PATIENT_OUT_PATIENT, (data) => {
+export const pa_editSelPatientOutPatient = createAction(at.PA_SEL_PATIENT_EDIT_OUT_PATIENT, (data) => {
 	return data;
 });
 
-export const pa_editSelPatientColposcopy = createAction(at.PA_EDIT_SEL_PATIENT_COLPOSCOPY, (data) => {
+export const pa_editSelPatientColposcopy = createAction(at.PA_SEL_PATIENT_EDIT_COLPOSCOPY, (data) => {
 	return data;
 });
 
-export const pa_editSelPatientTreat = createAction(at.PA_EDIT_SEL_PATIENT_TREAT, (data) => {
+export const pa_editSelPatientTreat = createAction(at.PA_SEL_PATIENT_EDIT_TREAT, (data) => {
 	return data;
 });
 

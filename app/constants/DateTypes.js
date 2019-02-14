@@ -4,15 +4,10 @@
 /*----------- Patient -----------*/
 
 export type PatientInfo = {
-    id: string;
-    name: string;
-    age: number;
-    firstDiagnose: string;
-    lastDiagnose: string;
-    cardId: string;
-    phone: string;
+    key: string;
 
     base: PatientBaseInfo;
+    outPatientInfoList: Array<PatientOutPatientInfo>;
 };
 
 export type PatientBaseInfo = {
@@ -37,3 +32,53 @@ export type PatientBaseInfo = {
     contraceptionWay: string;
     other: string;
 };
+
+export type PatientOutPatientInfo = {
+    date: string;
+    cytology_date: string;
+    cytology_from: string;
+    cytology_report: string;
+
+    HPV_date: string;
+    HPV_from: string;
+    HPV_report: string;
+
+    imaging_date: string;
+    imaging_from: string;
+    imaging_report: string;
+    imaging_id: string;
+
+    histology_date: string;
+    histology_from: string;
+    histology_report: string;
+    histology_id: string;
+}
+
+export type PatientColposcopy = {
+    date: string;
+    cervixExpose: string;
+    conversionAreaType: string;
+    vinegarWhite: string;
+    glandCleft: string;
+    vessel: string;
+    inlay: string;
+    unusualVessel: string;
+    iodine: string;
+    vagina: string;
+    vulva: string;
+    microscopicImage: string;
+}
+
+export type PatientTreat = {
+    date: string;
+    laser_place: string;
+    laser_area: string;
+    laser_other: string;
+    LEEP_1_length: number;
+    LEEP_1_diameter: number;
+    LEEP_1_thickness: number;
+    LEEP_2: string;
+    LEEP_other: string;
+    other: string;
+
+}

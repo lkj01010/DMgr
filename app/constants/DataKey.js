@@ -109,10 +109,6 @@ export const OutpatientInfo = {
         show: "编号",
     },
 
-    colposcopy: {
-        show: "阴道镜",
-    },
-
     histology: {
         show: "组织学",
     },
@@ -128,13 +124,17 @@ export const OutpatientInfo = {
     histology_id: {
         show: "编号",
     },
-    
+
+    colposcopy: {
+        show: "阴道镜",
+    },
+
     treat: {
         show: "治疗",
     },
 }
 
-export const Colposcocy = {
+export const Colposcopy = {
     date: {
         show: "检查日期",
     },
@@ -177,9 +177,9 @@ export const Treat = {
     date: {
         show: "治疗日期",
     },
-    type: {
-        show: "治疗方式",
-    },
+    // type: {
+    //     show: "治疗方式",
+    // },
 
     laser: {
         show: "激光",
