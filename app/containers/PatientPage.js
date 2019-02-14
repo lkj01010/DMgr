@@ -6,7 +6,7 @@ import { Button, Layout, Menu, Breadcrumb, Icon, Row, Col, Divider, Input,
 import connectComponent from '../utils/connectComponent';
 
 import styles from './PatientPage.css';
-import {BaseInfo, OutpatientInfo, Colposcocy, Treat} from '../constants/Datakey';
+import {BaseInfo, OutpatientInfo, Colposcopy, Treat} from '../constants/Datakey';
 import {PatientInfo, PatientBaseInfo} from "../constants/DateTypes";
 
 import moment from 'moment'
@@ -599,7 +599,7 @@ class PatientPage extends Component<Props> {
                 </Row>
 
                 <Collapse defaultActiveKey={[]} onChange={this.cb_TreatCollapse}style={{marginTop: 16}}>
-                    {this.renderColposcocy()}
+                    {this.renderColposcopy()}
                     {this.renderTreat()}
                 </Collapse>
             </Panel>
@@ -607,7 +607,7 @@ class PatientPage extends Component<Props> {
     }
 
 
-    renderColposcocy() {
+    renderColposcopy() {
         const text = "12121212";
         return (
             <Panel style={InnerPanelStyle} header="阴道镜">
@@ -625,7 +625,7 @@ class PatientPage extends Component<Props> {
                     </Col> */}
                     <Col span={8}>
                         <InputGroup compacts>
-                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.cervixExpose.show} />
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.cervixExpose.show} />
                             <Select size="small" style={{width: '50%'}} defaultValue="">
                                 <Option value="充分">充分</Option>
                                 <Option value="不充分">不充分</Option>
@@ -634,7 +634,7 @@ class PatientPage extends Component<Props> {
                     </Col>
                     <Col span={8}>
                         <InputGroup compact >
-                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.conversionAreaType.show} />
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.conversionAreaType.show} />
                             <Select size="small" style={{width: '50%'}} defaultValue="">
                                 <Option value="type1">Ⅰ型</Option>
                                 <Option value="type2">Ⅱ型</Option>
@@ -647,7 +647,7 @@ class PatientPage extends Component<Props> {
                 <InputGroup size="small" className={styles.infoRow}>
                     <Col span={8}>
                         <InputGroup compact >
-                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.vinegarWhite.show} />
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.vinegarWhite.show} />
                             <Select size="small" style={{width: '50%'}} defaultValue="">
                                 <Option value="厚">厚</Option>
                                 <Option value="薄">薄</Option>
@@ -657,7 +657,7 @@ class PatientPage extends Component<Props> {
                     </Col>
                     <Col span={8}>
                         <InputGroup compacts>
-                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.glandCleft.show} />
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.glandCleft.show} />
                             <Select size="small" style={{width: '50%'}} defaultValue="">
                                 <Option value="低级别">低级别</Option>
                                 <Option value="高级别">高级别</Option>
@@ -666,7 +666,7 @@ class PatientPage extends Component<Props> {
                     </Col>
                     <Col span={8}>
                         <InputGroup compact >
-                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.vessel.show} />
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.vessel.show} />
                             <Select size="small" style={{width: '50%'}} defaultValue="">
                                 <Option value="细点状">细点状</Option>
                                 <Option value="粗点状">粗点状</Option>
@@ -678,7 +678,7 @@ class PatientPage extends Component<Props> {
                 <InputGroup size="small" className={styles.infoRow}>
                     <Col span={8}>
                         <InputGroup compact >
-                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.inlay.show} />
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.inlay.show} />
                             <Select size="small" style={{width: '50%'}} defaultValue="">
                                 <Option value="粗">粗</Option>
                                 <Option value="细">细</Option>
@@ -687,7 +687,7 @@ class PatientPage extends Component<Props> {
                     </Col>
                     <Col span={8}>
                         <InputGroup compacts>
-                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.unusualVessel.show} />
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.unusualVessel.show} />
                             <Select size="small" style={{width: '50%'}} defaultValue="">
                                 <Option value="有">有</Option>
                                 <Option value="无">无</Option>
@@ -696,7 +696,7 @@ class PatientPage extends Component<Props> {
                     </Col>
                     <Col span={8}>
                         <InputGroup compact >
-                            <Input disabled style={{width: '50%'}} defaultValue={Colposcocy.iodine.show} />
+                            <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.iodine.show} />
                             <Select size="small" style={{width: '50%'}} defaultValue="">
                                 <Option value="着色">着色</Option>
                                 <Option value="不着色">不着色</Option>
@@ -708,19 +708,19 @@ class PatientPage extends Component<Props> {
                 <InputGroup size="small" className={styles.infoRow}>
                     <Col span={8}>
                         <InputGroup compact >
-                            <Input disabled style={{width: '20%'}} defaultValue={Colposcocy.vagina.show} />
+                            <Input disabled style={{width: '20%'}} defaultValue={Colposcopy.vagina.show} />
                             <Input style={{width: '80%'}} defaultValue="" />
                         </InputGroup>
                     </Col>
                     <Col span={8}>
                         <InputGroup compacts>
-                            <Input disabled style={{width: '20%'}} defaultValue={Colposcocy.vulva.show} />
+                            <Input disabled style={{width: '20%'}} defaultValue={Colposcopy.vulva.show} />
                             <Input style={{width: '80%'}} defaultValue="" />
                         </InputGroup>
                     </Col>
                     <Col span={8}>
                         <InputGroup compact >
-                            <Input disabled style={{width: '30%'}} defaultValue={Colposcocy.microscopicImage.show} />
+                            <Input disabled style={{width: '30%'}} defaultValue={Colposcopy.microscopicImage.show} />
                             <Input style={{width: '70%'}} defaultValue="" />
                         </InputGroup>
                     </Col>
