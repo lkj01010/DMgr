@@ -353,14 +353,24 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compacts>
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.occupation.show} />
-                            <Input style={{width: '60%'}} defaultValue="" />
+                            <Input style={{width: '60%'}} defaultValue={base.occupation} 
+                                value={base.occupation} onChange={(e) => {
+                                    actions.pa_editSelPatientBase({
+                                        occupation: e.target.value,
+                                    });
+                                }}
+                            />
                         </InputGroup>
                     </Col>
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.smoking.show} />
                             {/* <Input style={{width: '60%'}} defaultValue="" /> */}
-                            <Select size="small" style={{width: '60%'}} defaultValue="">
+                            <Select size="small" style={{width: '60%'}} defaultValue={base.smoking} onChange={(value) => {
+                                actions.pa_editSelPatientBase({
+                                    smoking: value,
+                                });
+                            }}>
                                 <Option value="是">是</Option>
                                 <Option value="否">否</Option>
                             </Select>
@@ -372,25 +382,41 @@ class PatientPage extends Component<Props> {
                     <Col span={6}>
                         <InputGroup compact >
                             <Input disabled style={{width: '60%'}} defaultValue={BaseInfo.firstMlAge.show} />
-                            <InputNumber size="small" style={{width: '40%'}}/>
+                            <InputNumber size="small" style={{width: '40%'}} value={base.firstMlAge} onChange={(value) => {
+                                    actions.pa_editSelPatientBase({
+                                        firstMlAge: value,
+                                    });
+                                }}/>
                         </InputGroup>
                     </Col>
                     <Col span={6}>
                         <InputGroup compacts>
                             <Input disabled style={{width: '60%'}} defaultValue={BaseInfo.pregnantTimes.show} />
-                            <InputNumber size="small" style={{width: '40%'}}/>
+                            <InputNumber size="small" style={{width: '40%'}} value={base.pregnantTimes} onChange={(value) => {
+                                    actions.pa_editSelPatientBase({
+                                        pregnantTimes: value,
+                                    });
+                                }}/>
                         </InputGroup>
                     </Col>
                     <Col span={6}>
                         <InputGroup compact >
                             <Input disabled style={{width: '60%'}} defaultValue={BaseInfo.produceChildTimes.show} />
-                            <InputNumber size="small" style={{width: '40%'}}/>
+                            <InputNumber size="small" style={{width: '40%'}} value={base.produceChildTimes} onChange={(value) => {
+                                    actions.pa_editSelPatientBase({
+                                        produceChildTimes: value,
+                                    });
+                                }}/>
                         </InputGroup>
                     </Col>
                     <Col span={6}>
                         <InputGroup compact >
                             <Input disabled style={{width: '60%'}} defaultValue={BaseInfo.abortionTimes.show} />
-                            <InputNumber size="small" style={{width: '40%'}}/>
+                            <InputNumber size="small" style={{width: '40%'}} value={base.abortionTimes} onChange={(value) => {
+                                    actions.pa_editSelPatientBase({
+                                        abortionTimes: value,
+                                    });
+                                }}/>
                         </InputGroup>
                     </Col>
                 </InputGroup>
@@ -399,13 +425,21 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.familyHistory.show} />
-                            <Input style={{width: '60%'}} defaultValue="" />
+                            <Input style={{width: '60%'}} defaultValue="" value={base.familyHistory} onChange={(e) => {
+                                    actions.pa_editSelPatientBase({
+                                        familyHistory: e.target.value,
+                                    });
+                                }}/>
                         </InputGroup>
                     </Col>
                     <Col span={8}>
                         <InputGroup compacts>
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.mlBleeding.show} />
-                            <Select size="small" style={{width: '60%'}} defaultValue="">
+                            <Select size="small" style={{width: '60%'}} defaultValue={BaseInfo.mlBleeding} onChange={(value) => {
+                                actions.pa_editSelPatientBase({
+                                    mlBleeding: value,
+                                });
+                            }}>
                                 <Option value="是">是</Option>
                                 <Option value="否">否</Option>
                             </Select>
@@ -414,7 +448,11 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.contraceptionWay.show} />
-                            <Input style={{width: '60%'}} defaultValue="" />
+                            <Input style={{width: '60%'}} defaultValue="" value={base.contraceptionWay} onChange={(e) => {
+                                    actions.pa_editSelPatientBase({
+                                        contraceptionWay: e.target.value,
+                                    });
+                                }}/>
                         </InputGroup>
                     </Col>
                 </InputGroup>
@@ -423,13 +461,21 @@ class PatientPage extends Component<Props> {
                     <Col span={12}>
                         <InputGroup compact >
                             <Input disabled style={{width: '20%'}} defaultValue={BaseInfo.diagnose.show} />
-                            <Input style={{width: '80%'}} defaultValue="" />
+                            <Input style={{width: '80%'}} defaultValue="" value={base.diagnose} onChange={(e) => {
+                                    actions.pa_editSelPatientBase({
+                                        diagnose: e.target.value,
+                                    });
+                                }}/>
                         </InputGroup>
                     </Col>
                     <Col span={12}>
                         <InputGroup compact >
                             <Input disabled style={{width: '20%'}} defaultValue={BaseInfo.other.show} />
-                            <Input style={{width: '80%'}} defaultValue="" />
+                            <Input style={{width: '80%'}} defaultValue="" value={base.other} onChange={(e) => {
+                                    actions.pa_editSelPatientBase({
+                                        other: e.target.value,
+                                    });
+                                }}/>
                         </InputGroup>
                     </Col>
                 </InputGroup>
