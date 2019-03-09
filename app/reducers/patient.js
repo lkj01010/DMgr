@@ -1,6 +1,6 @@
 import * as at from '../constants/ActionTypes';
 
-import {PatientInfo, PatientOutPatientInfo, PatientColposcopy, 
+import {PatientInfo, PatientTreatRecord, PatientColposcopy, 
 	PatientTreat} from '../constants/DateTypes';
 import { pa_newPatientInfo } from '../actions/patient';
 
@@ -31,21 +31,21 @@ function newPatientInfo(): PatientInfo {
 			diagnose: '',
 			nation: '',
 			occupation: '',
-			smoking: false,
-			firstMlAage: 0,
+			smoking: '否',
+			firstMlAge: 0,
 			pregnantTimes: 0,
 			produceChildTimes: 0,
 			abortionTimes: 0,
 			familyHistory: '',
-			mlBleeding: false,
+			mlBleeding: '否',
 			contraceptionWay: '',
 			other: '',
 		},
-		outPatientInfoList: [],
+		treatRecordList: [],
 	}
 }
 
-function newOutPatientInfo(): PatientOutPatientInfo {
+function newTreatRecord(): PatientTreatRecord {
 	return {
 		date: '',
 		cytology_date: '',
@@ -129,95 +129,102 @@ export default function (state :State = initialState, action: any) {
 		}
 		case at.PA_SEL_PATIENT_ADD_RECORD: {
 			const {selPatientInfo} = state;
-			const {outPatientInfoList} = selPatientInfo;
+			const {treatRecordList} = selPatientInfo;
 			// const ol = [
-			// 	...outPatientInfoList,
-			// 	newOutPatientInfo(),
+			// 	...treatRecordList,
+			// 	newtreatRecord(),
 			// ];
 			return {
 				...state,
-				outPatientInfoList: [
-					...outPatientInfoList,
-					newOutPatientInfo(),
-				],
+				selPatientInfo: {
+					...selPatientInfo,
+					treatRecordList: [
+						...treatRecordList,
+						newTreatRecord(),
+					]
+				}
 			};
 		}
 		case at.PA_SEL_PATIENT_DEL_RECORD: {
 			const {index} = payload;
 			const {selPatientInfo} = state;
-			const {outPatientInfoList} = selPatientInfo;
-			outPatientInfoList.splice(index, 1);
+			const {treatRecordList} = selPatientInfo;
+			treatRecordList.splice(index, 1);
 			// const ol = [
-			// 	...outPatientInfoList,
-			// 	newOutPatientInfo(),
+			// 	...treatRecordList,
+			// 	newtreatRecord(),
 			// ];
 			return {
 				...state,
-				outPatientInfoList: [
-					...outPatientInfoList,
-				],
+				selPatientInfo: {
+					...selPatientInfo,
+					treatRecordList: [
+						...treatRecordList,
+						newTreatRecord(),
+					]
+				}
 			};
 		}
 		case at.PA_SEL_PATIENT_EDIT_OUT_PATIENT: {
 			const {modify, index} = payload;
 			const {selPatientInfo} = state;
-			const {outPatientInfoList} = selPatientInfo;
-			let outPatientInfo = outPatientInfoList[index];
-			const newOutPatientInfoList = [...outPatientInfoList];
-			outPatientInfo = {
-				...outPatientInfo,
+			const {treatRecordList} = selPatientInfo;
+			let treatRecord = treatRecordList[index];
+			const newTreatRecordList = [...treatRecordList];
+			treatRecord = {
+				...treatRecord,
 				...modify,
 			};
-			newOutPatientInfoList[index] = outPatientInfo;
+			newTreatRecordList[index] = treatRecord;
 			return {
 				...state,
 				selPatientInfo: {
 					...selPatientInfo,
-					outPatientInfoList: newOutPatientInfoList,
+					treatRecordList: newTreatRecordList,
 				},
 			};
 		}
 		case at.PA_SEL_PATIENT_EDIT_COLPOSCOPY: {
 			const {modify, index} = payload;
 			const {selPatientInfo} = state;
-			const {outPatientInfoList} = selPatientInfo;
-			let outPatientInfo = outPatientInfoList[index];
-			const newOutPatientInfoList = [...outPatientInfoList];
-			outPatientInfo = {
-				...outPatientInfo,
+			const {treatRecordList} = selPatientInfo;
+			let treatRecord = treatRecordList[index];
+			const newTreatRecordList = [...treatRecordList];
+			treatRecord = {
+				...treatRecord,
 			};
-			outPatientInfo.colposcopy = {
-				...outPatientInfo.colposcopy,
+			treatRecord.colposcopy = {
+				...treatRecord.colposcopy,
 				modify,
 			};
-			newOutPatientInfoList[index] = outPatientInfo;
+			newTreatRecordList[index] = treatRecord;
 			return {
 				...state,
 				selPatientInfo: {
 					...selPatientInfo,
-					outPatientInfoList: newOutPatientInfoList,
+					treatRecordList: newTreatRecordList,
 				},
 			};
 		}
 		case at.PA_SEL_PATIENT_EDIT_TREAT: {
 			const {modify, index} = payload;
 			const {selPatientInfo} = state;
-			const {outPatientInfoList} = selPatientInfo;
-			let outPatientInfo = outPatientInfoList[index];
-			const newOutPatientInfoList = [...outPatientInfoList];
-			outPatientInfo = {
-				...outPatientInfo,
+			const {treatRecordList} = selPatientInfo;
+			let treatRecord = treatRecordList[index];
+			const newTreatRecordList = [...treatRecordList];
+			treatRecord = {
+				...treatRecord,
 			};
-			outPatientInfo.treat = {
-				...outPatientInfo.treat,
+			treatRecord.treat = {
+				...treatRecord.treat,
 				modify,
 			};
-			newOutPatientInfoList[index] = outPatientInfo;
+			newTreatRecordList[index] = treatRecord;
 			return {
 				...state,
 				selPatientInfo: {
 					...selPatientInfo,
-					outPatientInfoList: newOutPatientInfoList,
+					treatRecordList: newTreatRecordList,
 				},
 			};
 		}

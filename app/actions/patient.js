@@ -24,6 +24,17 @@ export const pa_editSelPatientBase = createAction(at.PA_SEL_PATIENT_EDIT_BASE, (
 	return data;
 });
 
+export const pa_addSelPatientRecord = createAction(at.PA_SEL_PATIENT_ADD_RECORD, () => {
+	return {
+	};
+});
+
+export const pa_delSelPatientRecord = createAction(at.PA_SEL_PATIENT_DEL_RECORD, () => {
+	return {
+	};
+});
+
+
 export const pa_editSelPatientOutPatient = createAction(at.PA_SEL_PATIENT_EDIT_OUT_PATIENT, (data) => {
 	return data;
 });

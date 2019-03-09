@@ -7,7 +7,7 @@ export type PatientInfo = {
     key: string;
 
     base: PatientBaseInfo;
-    outPatientInfoList: Array<PatientOutPatientInfo>;
+    treatRecordList: Array<PatientTreatRecord>;
 };
 
 export type PatientBaseInfo = {
@@ -22,18 +22,18 @@ export type PatientBaseInfo = {
     diagnose: string;
     nation: string;
     occupation: string;
-    smoking: boolean;
+    smoking: string;
     firstMlAage: number;
     pregnantTimes: number;
     produceChildTimes: number;
     abortionTimes: number;
     familyHistory: string;
-    mlBleeding: boolean;
+    mlBleeding: string;
     contraceptionWay: string;
     other: string;
 };
 
-export type PatientOutPatientInfo = {
+export type PatientTreatRecord = {
     date: string;
     cytology_date: string;
     cytology_from: string;

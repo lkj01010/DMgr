@@ -6,7 +6,7 @@ import { Button, Layout, Menu, Breadcrumb, Icon, Row, Col, Divider, Input,
 import connectComponent from '../utils/connectComponent';
 
 import styles from './PatientPage.css';
-import {BaseInfo, OutpatientInfo, Colposcopy, Treat} from '../constants/Datakey';
+import {BaseInfo, TreatRecord, Colposcopy, Treat} from '../constants/Datakey';
 import {PatientInfo, PatientBaseInfo} from "../constants/DateTypes";
 
 import moment from 'moment'
@@ -253,7 +253,7 @@ class PatientPage extends Component<Props> {
                             />
                         </Tooltip> */}
                         <Button type="primary" style={{marginRight: 8}} size="small"
-                            onClick={() => this.onClickHideDetail()}
+                            onClick={() => this.onClickAddRecord()}
                         >
                            添加病历
                         </Button>
@@ -435,7 +435,7 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compacts>
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.mlBleeding.show} />
-                            <Select size="small" style={{width: '60%'}} defaultValue={BaseInfo.mlBleeding} onChange={(value) => {
+                            <Select size="small" style={{width: '60%'}} defaultValue={base.mlBleeding} onChange={(value) => {
                                 actions.pa_editSelPatientBase({
                                     mlBleeding: value,
                                 });
@@ -486,11 +486,165 @@ class PatientPage extends Component<Props> {
     }
 
     renderDetailTreatHistory() {
+        const {selPatientInfo} = this.props;
         return (
             <div className={styles.infoRow} style={{marginTop: 8}}>
-                <Collapse defaultActiveKey={[]} onChange={this.cb_TreatCollapse}>
-                    {this.renderOutpatient()}
-                    {this.renderOutpatient()}
+                <Collapse defaultActiveKey={[]} onChange={this.cb_TreatCollapse}> 
+                    {
+                        selPatientInfo.treatRecordList.map((data, index) => {
+                            return (
+                                <Panel style={OutPatientPanelStyle} header="病历 2018-11-05">
+
+                                    <InputGroup size="small" className={styles.infoRow}>
+                                        <DatePicker style={{width: '20%'}}/>
+                                    </InputGroup>
+
+                                    <Row>
+                                        <Col span={2} style={{marginTop: 5}}>
+                                            {TreatRecord.cytology.show}
+                                        </Col>
+                                        <Col span={22}>
+                                            <InputGroup size="small" className={styles.infoRow}>
+                                                <Col span={6}>
+                                                    <InputGroup compact >
+                                                        <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.cytology_date.show} />
+                                                        <DatePicker style={{width: '70%'}}/>
+                                                    </InputGroup>
+                                                </Col>
+                                                <Col span={5}>
+                                                    <InputGroup compacts>
+                                                        <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.cytology_from.show} />
+                                                        <Select size="small" style={{width: '50%'}} defaultValue="">
+                                                            <Option value="本院">本院</Option>
+                                                            <Option value="外院">外院</Option>
+                                                        </Select>
+                                                    </InputGroup>
+                                                </Col>
+                                                <Col span={13}>
+                                                    <InputGroup compact >
+                                                        <Input disabled style={{width: '15%'}} defaultValue={TreatRecord.cytology_report.show} />
+                                                        <Input style={{width: '85%'}} defaultValue="" />
+                                                    </InputGroup>
+                                                </Col>
+                                            </InputGroup>
+                                        </Col>
+                                    </Row>
+
+                                    <Row>
+                                        <Col span={2} style={{marginTop: 5}}>
+                                            {TreatRecord.HPV.show}
+                                        </Col>
+                                        <Col span={22}>
+                                            <InputGroup size="small" className={styles.infoRow}>
+                                                <Col span={6}>
+                                                    <InputGroup compact >
+                                                        <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.HPV_date.show} />
+                                                        <DatePicker style={{width: '70%'}}/>
+                                                    </InputGroup>
+                                                </Col>
+                                                <Col span={5}>
+                                                    <InputGroup compacts>
+                                                        <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.HPV_from.show} />
+                                                        <Select size="small" style={{width: '50%'}} defaultValue="">
+                                                            <Option value="本院">本院</Option>
+                                                            <Option value="外院">外院</Option>
+                                                        </Select>
+                                                    </InputGroup>
+                                                </Col>
+                                                <Col span={13}>
+                                                    <InputGroup compact >
+                                                        <Input disabled style={{width: '15%'}} defaultValue={TreatRecord.HPV_report.show} />
+                                                        <Input style={{width: '85%'}} defaultValue="" />
+                                                    </InputGroup>
+                                                </Col>
+                                            </InputGroup>
+                                        </Col>
+                                    </Row>
+
+                                    <Row>
+                                        <Col span={2} style={{marginTop: 5}}>
+                                            {TreatRecord.imaging.show}
+                                        </Col>
+                                        <Col span={22}>
+                                            <InputGroup size="small" className={styles.infoRow}>
+                                                <Col span={6}>
+                                                    <InputGroup compact >
+                                                        <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.imaging_date.show} />
+                                                        <DatePicker style={{width: '70%'}}/>
+                                                    </InputGroup>
+                                                </Col>
+                                                <Col span={5}>
+                                                    <InputGroup compacts>
+                                                        <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.imaging_from.show} />
+                                                        <Select size="small" style={{width: '50%'}} defaultValue="">
+                                                            <Option value="本院">本院</Option>
+                                                            <Option value="外院">外院</Option>
+                                                        </Select>
+                                                    </InputGroup>
+                                                </Col>
+                                                <Col span={5}>
+                                                    <InputGroup compact >
+                                                        <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.imaging_id.show} />
+                                                        <Input style={{width: '70%'}} defaultValue="" />
+                                                    </InputGroup>
+                                                </Col>
+                                                <Col span={8}>
+                                                    <InputGroup compact >
+                                                        <Input disabled style={{width: '20%'}} defaultValue={TreatRecord.imaging_report.show} />
+                                                        <Input style={{width: '80%'}} defaultValue="" />
+                                                    </InputGroup>
+                                                </Col>
+                                            </InputGroup>
+                                        </Col>
+                                    </Row>
+
+                                    <Row>
+                                        <Col span={2} style={{marginTop: 5}}>
+                                            {TreatRecord.histology.show}
+                                        </Col>
+                                        <Col span={22}>
+                                            <InputGroup size="small" className={styles.infoRow}>
+                                                <Col span={6}>
+                                                    <InputGroup compact >
+                                                        <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.histology_date.show} />
+                                                        <DatePicker style={{width: '70%'}}/>
+                                                    </InputGroup>
+                                                </Col>
+                                                <Col span={5}>
+                                                    <InputGroup compacts>
+                                                        <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.histology_from.show} />
+                                                        <Select size="small" style={{width: '50%'}} defaultValue="">
+                                                            <Option value="本院">本院</Option>
+                                                            <Option value="外院">外院</Option>
+                                                        </Select>
+                                                    </InputGroup>
+                                                </Col>
+                                                <Col span={5}>
+                                                    <InputGroup compact >
+                                                        <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.histology_id.show} />
+                                                        <Input style={{width: '70%'}} defaultValue="" />
+                                                    </InputGroup>
+                                                </Col>
+                                                <Col span={8}>
+                                                    <InputGroup compact >
+                                                        <Input disabled style={{width: '20%'}} defaultValue={TreatRecord.histology_report.show} />
+                                                        <Input style={{width: '80%'}} defaultValue="" />
+                                                    </InputGroup>
+                                                </Col>
+                                            </InputGroup>
+                                        </Col>
+                                    </Row>
+
+                                    <Collapse defaultActiveKey={[]} onChange={this.cb_TreatCollapse}style={{marginTop: 16}}>
+                                        {this.renderColposcopy()}
+                                        {this.renderTreat()}
+                                    </Collapse>
+                                </Panel>
+                            )
+                        })
+                    }
+                    {/* {this.renderTreatRecord()} */}
+                    {/* {this.renderTreatRecord()} */}
                 </Collapse>
             </div>
         );
@@ -500,7 +654,12 @@ class PatientPage extends Component<Props> {
 
     }
 
-    renderOutpatient() {
+    onClickAddRecord() {
+        const {actions, selPatientInfo} = this.props;
+        actions.pa_addSelPatientRecord();
+    }
+
+    renderTreatRecord(treatRecord: PatientTreatRecord) {
         return (
             <Panel style={OutPatientPanelStyle} header="病历 2018-11-05">
 
@@ -510,19 +669,19 @@ class PatientPage extends Component<Props> {
 
                 <Row>
                     <Col span={2} style={{marginTop: 5}}>
-                        {OutpatientInfo.cytology.show}
+                        {TreatRecord.cytology.show}
                     </Col>
                     <Col span={22}>
                         <InputGroup size="small" className={styles.infoRow}>
                             <Col span={6}>
                                 <InputGroup compact >
-                                    <Input disabled style={{width: '30%'}} defaultValue={OutpatientInfo.cytology_date.show} />
+                                    <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.cytology_date.show} />
                                     <DatePicker style={{width: '70%'}}/>
                                 </InputGroup>
                             </Col>
                             <Col span={5}>
                                 <InputGroup compacts>
-                                    <Input disabled style={{width: '50%'}} defaultValue={OutpatientInfo.cytology_from.show} />
+                                    <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.cytology_from.show} />
                                     <Select size="small" style={{width: '50%'}} defaultValue="">
                                         <Option value="本院">本院</Option>
                                         <Option value="外院">外院</Option>
@@ -531,7 +690,7 @@ class PatientPage extends Component<Props> {
                             </Col>
                             <Col span={13}>
                                 <InputGroup compact >
-                                    <Input disabled style={{width: '15%'}} defaultValue={OutpatientInfo.cytology_report.show} />
+                                    <Input disabled style={{width: '15%'}} defaultValue={TreatRecord.cytology_report.show} />
                                     <Input style={{width: '85%'}} defaultValue="" />
                                 </InputGroup>
                             </Col>
@@ -541,19 +700,19 @@ class PatientPage extends Component<Props> {
 
                 <Row>
                     <Col span={2} style={{marginTop: 5}}>
-                        {OutpatientInfo.HPV.show}
+                        {TreatRecord.HPV.show}
                     </Col>
                     <Col span={22}>
                         <InputGroup size="small" className={styles.infoRow}>
                             <Col span={6}>
                                 <InputGroup compact >
-                                    <Input disabled style={{width: '30%'}} defaultValue={OutpatientInfo.HPV_date.show} />
+                                    <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.HPV_date.show} />
                                     <DatePicker style={{width: '70%'}}/>
                                 </InputGroup>
                             </Col>
                             <Col span={5}>
                                 <InputGroup compacts>
-                                    <Input disabled style={{width: '50%'}} defaultValue={OutpatientInfo.HPV_from.show} />
+                                    <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.HPV_from.show} />
                                     <Select size="small" style={{width: '50%'}} defaultValue="">
                                         <Option value="本院">本院</Option>
                                         <Option value="外院">外院</Option>
@@ -562,7 +721,7 @@ class PatientPage extends Component<Props> {
                             </Col>
                             <Col span={13}>
                                 <InputGroup compact >
-                                    <Input disabled style={{width: '15%'}} defaultValue={OutpatientInfo.HPV_report.show} />
+                                    <Input disabled style={{width: '15%'}} defaultValue={TreatRecord.HPV_report.show} />
                                     <Input style={{width: '85%'}} defaultValue="" />
                                 </InputGroup>
                             </Col>
@@ -572,19 +731,19 @@ class PatientPage extends Component<Props> {
 
                 <Row>
                     <Col span={2} style={{marginTop: 5}}>
-                        {OutpatientInfo.imaging.show}
+                        {TreatRecord.imaging.show}
                     </Col>
                     <Col span={22}>
                         <InputGroup size="small" className={styles.infoRow}>
                             <Col span={6}>
                                 <InputGroup compact >
-                                    <Input disabled style={{width: '30%'}} defaultValue={OutpatientInfo.imaging_date.show} />
+                                    <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.imaging_date.show} />
                                     <DatePicker style={{width: '70%'}}/>
                                 </InputGroup>
                             </Col>
                             <Col span={5}>
                                 <InputGroup compacts>
-                                    <Input disabled style={{width: '50%'}} defaultValue={OutpatientInfo.imaging_from.show} />
+                                    <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.imaging_from.show} />
                                     <Select size="small" style={{width: '50%'}} defaultValue="">
                                         <Option value="本院">本院</Option>
                                         <Option value="外院">外院</Option>
@@ -593,13 +752,13 @@ class PatientPage extends Component<Props> {
                             </Col>
                             <Col span={5}>
                                 <InputGroup compact >
-                                    <Input disabled style={{width: '30%'}} defaultValue={OutpatientInfo.imaging_id.show} />
+                                    <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.imaging_id.show} />
                                     <Input style={{width: '70%'}} defaultValue="" />
                                 </InputGroup>
                             </Col>
                             <Col span={8}>
                                 <InputGroup compact >
-                                    <Input disabled style={{width: '20%'}} defaultValue={OutpatientInfo.imaging_report.show} />
+                                    <Input disabled style={{width: '20%'}} defaultValue={TreatRecord.imaging_report.show} />
                                     <Input style={{width: '80%'}} defaultValue="" />
                                 </InputGroup>
                             </Col>
@@ -609,19 +768,19 @@ class PatientPage extends Component<Props> {
 
                 <Row>
                     <Col span={2} style={{marginTop: 5}}>
-                        {OutpatientInfo.histology.show}
+                        {TreatRecord.histology.show}
                     </Col>
                     <Col span={22}>
                         <InputGroup size="small" className={styles.infoRow}>
                             <Col span={6}>
                                 <InputGroup compact >
-                                    <Input disabled style={{width: '30%'}} defaultValue={OutpatientInfo.histology_date.show} />
+                                    <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.histology_date.show} />
                                     <DatePicker style={{width: '70%'}}/>
                                 </InputGroup>
                             </Col>
                             <Col span={5}>
                                 <InputGroup compacts>
-                                    <Input disabled style={{width: '50%'}} defaultValue={OutpatientInfo.histology_from.show} />
+                                    <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.histology_from.show} />
                                     <Select size="small" style={{width: '50%'}} defaultValue="">
                                         <Option value="本院">本院</Option>
                                         <Option value="外院">外院</Option>
@@ -630,13 +789,13 @@ class PatientPage extends Component<Props> {
                             </Col>
                             <Col span={5}>
                                 <InputGroup compact >
-                                    <Input disabled style={{width: '30%'}} defaultValue={OutpatientInfo.histology_id.show} />
+                                    <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.histology_id.show} />
                                     <Input style={{width: '70%'}} defaultValue="" />
                                 </InputGroup>
                             </Col>
                             <Col span={8}>
                                 <InputGroup compact >
-                                    <Input disabled style={{width: '20%'}} defaultValue={OutpatientInfo.histology_report.show} />
+                                    <Input disabled style={{width: '20%'}} defaultValue={TreatRecord.histology_report.show} />
                                     <Input style={{width: '80%'}} defaultValue="" />
                                 </InputGroup>
                             </Col>

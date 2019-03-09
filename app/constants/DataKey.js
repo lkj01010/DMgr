@@ -62,7 +62,7 @@ export const BaseInfo = {
 
 };
 
-export const OutpatientInfo = {
+export const TreatRecord = {
     date: {
         show: "门诊日期",
     },
