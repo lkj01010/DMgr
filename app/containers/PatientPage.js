@@ -93,6 +93,8 @@ const InnerPanelStyle = {
     // overflow: 'hidden'
 };
 
+const dateFormat = 'YYYY-MM-DD';
+
 class PatientPage extends Component<Props> {
     props: Props;
 
@@ -287,7 +289,8 @@ class PatientPage extends Component<Props> {
                         <InputGroup compacts>
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.birthDate.show} />
                             {/* <Input style={{width: '60%'}} defaultValue="" /> */}
-                            <DatePicker style={{width: '60%'}} onChange={
+                            <DatePicker style={{width: '60%'}} defaultValue={base.birthDate==''? null: moment(base.birthDate, dateFormat)}
+                            onChange={
                                 (date, dateString) => {
                                     console.log(date, dateString);
                                     let age = moment().diff(date, 'years');
@@ -486,17 +489,29 @@ class PatientPage extends Component<Props> {
     }
 
     renderDetailTreatHistory() {
-        const {selPatientInfo} = this.props;
+        const {selPatientInfo, actions} = this.props;
         return (
             <div className={styles.infoRow} style={{marginTop: 8}}>
                 <Collapse defaultActiveKey={[]} onChange={this.cb_TreatCollapse}> 
                     {
                         selPatientInfo.treatRecordList.map((data, index) => {
                             return (
-                                <Panel style={OutPatientPanelStyle} header="病历 2018-11-05">
+                                <Panel key={index} style={OutPatientPanelStyle} header={"病历 " + data.date}>
 
                                     <InputGroup size="small" className={styles.infoRow}>
-                                        <DatePicker style={{width: '20%'}}/>
+                                        <DatePicker style={{width: '20%'}} defaultValue={data.date==''? null: moment(data.date, dateFormat)}
+                                            onChange={
+                                                (date, dateString) => {
+                                                    console.log('date=' + dateString);
+                                                    actions.pa_editSelPatientTreatRecord({
+                                                        modify: {
+                                                            date: dateString,
+                                                        },
+                                                        index: index,
+                                                    });
+                                                }
+                                            }
+                                        />
                                     </InputGroup>
 
                                     <Row>
@@ -508,13 +523,32 @@ class PatientPage extends Component<Props> {
                                                 <Col span={6}>
                                                     <InputGroup compact >
                                                         <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.cytology_date.show} />
-                                                        <DatePicker style={{width: '70%'}}/>
+                                                        <DatePicker style={{width: '70%'}}
+                                                            defaultValue={data.date==''? null: moment(data.cytology_date, dateFormat)}
+                                                            onChange={
+                                                                (date, dateString) => {
+                                                                    actions.pa_editSelPatientTreatRecord({
+                                                                        modify: {
+                                                                            cytology_date: dateString,
+                                                                        },
+                                                                        index: index,
+                                                                    });
+                                                                }
+                                                            }
+                                                        />
                                                     </InputGroup>
                                                 </Col>
                                                 <Col span={5}>
                                                     <InputGroup compacts>
                                                         <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.cytology_from.show} />
-                                                        <Select size="small" style={{width: '50%'}} defaultValue="">
+                                                        <Select size="small" style={{width: '50%'}} defaultValue={data.cytology_from} onChange={(value) => {
+                                                            actions.pa_editSelPatientTreatRecord({
+                                                                modify: {
+                                                                    cytology_from: value,
+                                                                        },
+                                                                index: index,
+                                                            });
+                                                        }}>
                                                             <Option value="本院">本院</Option>
                                                             <Option value="外院">外院</Option>
                                                         </Select>
@@ -523,7 +557,17 @@ class PatientPage extends Component<Props> {
                                                 <Col span={13}>
                                                     <InputGroup compact >
                                                         <Input disabled style={{width: '15%'}} defaultValue={TreatRecord.cytology_report.show} />
-                                                        <Input style={{width: '85%'}} defaultValue="" />
+                                                        <Input style={{width: '85%'}} defaultValue="" 
+                                                            value={data.cytology_report} onChange={(e) => {
+                                                                actions.pa_editSelPatientTreatRecord({
+                                                                    modify: {
+                                                                        cytology_report: e.target.value,
+                                                                            },
+                                                                    index: index,   
+                                                                    }
+                                                                );
+                                                            }}
+                                                        />
                                                     </InputGroup>
                                                 </Col>
                                             </InputGroup>
@@ -539,13 +583,32 @@ class PatientPage extends Component<Props> {
                                                 <Col span={6}>
                                                     <InputGroup compact >
                                                         <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.HPV_date.show} />
-                                                        <DatePicker style={{width: '70%'}}/>
+                                                        <DatePicker style={{width: '70%'}}
+                                                            defaultValue={data.date==''? null: moment(data.HPV_date, dateFormat)}
+                                                            onChange={
+                                                                (date, dateString) => {
+                                                                    actions.pa_editSelPatientTreatRecord({
+                                                                        modify: {
+                                                                            HPV_date: dateString,
+                                                                        },
+                                                                        index: index,
+                                                                    });
+                                                                }
+                                                            }
+                                                        />
                                                     </InputGroup>
                                                 </Col>
                                                 <Col span={5}>
                                                     <InputGroup compacts>
                                                         <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.HPV_from.show} />
-                                                        <Select size="small" style={{width: '50%'}} defaultValue="">
+                                                        <Select size="small" style={{width: '50%'}} defaultValue={data.HPV_from} onChange={(value) => {
+                                                            actions.pa_editSelPatientTreatRecord({
+                                                                modify: {
+                                                                    HPV_from: value,
+                                                                        },
+                                                                index: index,
+                                                            });
+                                                        }}>
                                                             <Option value="本院">本院</Option>
                                                             <Option value="外院">外院</Option>
                                                         </Select>
@@ -554,7 +617,17 @@ class PatientPage extends Component<Props> {
                                                 <Col span={13}>
                                                     <InputGroup compact >
                                                         <Input disabled style={{width: '15%'}} defaultValue={TreatRecord.HPV_report.show} />
-                                                        <Input style={{width: '85%'}} defaultValue="" />
+                                                        <Input style={{width: '85%'}} defaultValue="" 
+                                                            value={data.HPV_report} onChange={(e) => {
+                                                                actions.pa_editSelPatientTreatRecord({
+                                                                    modify: {
+                                                                        HPV_report: e.target.value,
+                                                                            },
+                                                                    index: index,   
+                                                                    }
+                                                                );
+                                                            }}
+                                                        />
                                                     </InputGroup>
                                                 </Col>
                                             </InputGroup>
@@ -570,13 +643,32 @@ class PatientPage extends Component<Props> {
                                                 <Col span={6}>
                                                     <InputGroup compact >
                                                         <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.imaging_date.show} />
-                                                        <DatePicker style={{width: '70%'}}/>
+                                                        <DatePicker style={{width: '70%'}}
+                                                            defaultValue={data.imaging_date==''? null: moment(data.imaging_date, dateFormat)}
+                                                            onChange={
+                                                                (date, dateString) => {
+                                                                    actions.pa_editSelPatientTreatRecord({
+                                                                        modify: {
+                                                                            imaging_date: dateString,
+                                                                        },
+                                                                        index: index,
+                                                                    });
+                                                                }
+                                                            }
+                                                        />
                                                     </InputGroup>
                                                 </Col>
                                                 <Col span={5}>
                                                     <InputGroup compacts>
                                                         <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.imaging_from.show} />
-                                                        <Select size="small" style={{width: '50%'}} defaultValue="">
+                                                        <Select size="small" style={{width: '50%'}} defaultValue={data.imaging_from} onChange={(value) => {
+                                                            actions.pa_editSelPatientTreatRecord({
+                                                                modify: {
+                                                                    imaging_from: value,
+                                                                        },
+                                                                index: index,
+                                                            });
+                                                        }}>
                                                             <Option value="本院">本院</Option>
                                                             <Option value="外院">外院</Option>
                                                         </Select>
@@ -585,13 +677,33 @@ class PatientPage extends Component<Props> {
                                                 <Col span={5}>
                                                     <InputGroup compact >
                                                         <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.imaging_id.show} />
-                                                        <Input style={{width: '70%'}} defaultValue="" />
+                                                        <Input style={{width: '70%'}} defaultValue="" 
+                                                            value={data.imaging_id} onChange={(e) => {
+                                                                actions.pa_editSelPatientTreatRecord({
+                                                                    modify: {
+                                                                        imaging_id: e.target.value,
+                                                                            },
+                                                                    index: index,   
+                                                                    }
+                                                                );
+                                                            }}
+                                                        />
                                                     </InputGroup>
                                                 </Col>
                                                 <Col span={8}>
                                                     <InputGroup compact >
                                                         <Input disabled style={{width: '20%'}} defaultValue={TreatRecord.imaging_report.show} />
-                                                        <Input style={{width: '80%'}} defaultValue="" />
+                                                        <Input style={{width: '80%'}} defaultValue="" 
+                                                            value={data.imaging_report} onChange={(e) => {
+                                                                actions.pa_editSelPatientTreatRecord({
+                                                                    modify: {
+                                                                        imaging_report: e.target.value,
+                                                                            },
+                                                                    index: index,   
+                                                                    }
+                                                                );
+                                                            }}
+                                                        />
                                                     </InputGroup>
                                                 </Col>
                                             </InputGroup>
@@ -607,13 +719,32 @@ class PatientPage extends Component<Props> {
                                                 <Col span={6}>
                                                     <InputGroup compact >
                                                         <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.histology_date.show} />
-                                                        <DatePicker style={{width: '70%'}}/>
+                                                        <DatePicker style={{width: '70%'}}
+                                                            defaultValue={data.histology_date==''? null: moment(data.histology_date, dateFormat)}
+                                                            onChange={
+                                                                (date, dateString) => {
+                                                                    actions.pa_editSelPatientTreatRecord({
+                                                                        modify: {
+                                                                            histology_date: dateString,
+                                                                        },
+                                                                        index: index,
+                                                                    });
+                                                                }
+                                                            }
+                                                        />
                                                     </InputGroup>
                                                 </Col>
                                                 <Col span={5}>
                                                     <InputGroup compacts>
                                                         <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.histology_from.show} />
-                                                        <Select size="small" style={{width: '50%'}} defaultValue="">
+                                                        <Select size="small" style={{width: '50%'}} defaultValue={data.histology_from} onChange={(value) => {
+                                                            actions.pa_editSelPatientTreatRecord({
+                                                                modify: {
+                                                                    histology_from: value,
+                                                                        },
+                                                                index: index,
+                                                            });
+                                                        }}>
                                                             <Option value="本院">本院</Option>
                                                             <Option value="外院">外院</Option>
                                                         </Select>
@@ -622,13 +753,33 @@ class PatientPage extends Component<Props> {
                                                 <Col span={5}>
                                                     <InputGroup compact >
                                                         <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.histology_id.show} />
-                                                        <Input style={{width: '70%'}} defaultValue="" />
+                                                        <Input style={{width: '70%'}} defaultValue="" 
+                                                            value={data.histology_id} onChange={(e) => {
+                                                                actions.pa_editSelPatientTreatRecord({
+                                                                    modify: {
+                                                                        histology_id: e.target.value,
+                                                                            },
+                                                                    index: index,   
+                                                                    }
+                                                                );
+                                                            }}
+                                                        />
                                                     </InputGroup>
                                                 </Col>
                                                 <Col span={8}>
                                                     <InputGroup compact >
                                                         <Input disabled style={{width: '20%'}} defaultValue={TreatRecord.histology_report.show} />
-                                                        <Input style={{width: '80%'}} defaultValue="" />
+                                                        <Input style={{width: '80%'}} defaultValue="" 
+                                                            value={data.histology_report} onChange={(e) => {
+                                                                actions.pa_editSelPatientTreatRecord({
+                                                                    modify: {
+                                                                        histology_report: e.target.value,
+                                                                            },
+                                                                    index: index,   
+                                                                    }
+                                                                );
+                                                            }}
+                                                        />
                                                     </InputGroup>
                                                 </Col>
                                             </InputGroup>
@@ -636,8 +787,8 @@ class PatientPage extends Component<Props> {
                                     </Row>
 
                                     <Collapse defaultActiveKey={[]} onChange={this.cb_TreatCollapse}style={{marginTop: 16}}>
-                                        {this.renderColposcopy()}
-                                        {this.renderTreat()}
+                                        {this.renderColposcopy(data.colposcopy, index)}
+                                        {this.renderTreat(data.treat, index)}
                                     </Collapse>
                                 </Panel>
                             )
@@ -659,166 +810,178 @@ class PatientPage extends Component<Props> {
         actions.pa_addSelPatientRecord();
     }
 
-    renderTreatRecord(treatRecord: PatientTreatRecord) {
-        return (
-            <Panel style={OutPatientPanelStyle} header="病历 2018-11-05">
+    // renderTreatRecord(treatRecord: PatientTreatRecord) {
+    //     return (
+    //         <Panel style={OutPatientPanelStyle} header="病历 2018-11-05">
 
-                <InputGroup size="small" className={styles.infoRow}>
-                    <DatePicker style={{width: '20%'}}/>
-                </InputGroup>
+    //             <InputGroup size="small" className={styles.infoRow}>
+    //                 <DatePicker style={{width: '20%'}}/>
+    //             </InputGroup>
 
-                <Row>
-                    <Col span={2} style={{marginTop: 5}}>
-                        {TreatRecord.cytology.show}
-                    </Col>
-                    <Col span={22}>
-                        <InputGroup size="small" className={styles.infoRow}>
-                            <Col span={6}>
-                                <InputGroup compact >
-                                    <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.cytology_date.show} />
-                                    <DatePicker style={{width: '70%'}}/>
-                                </InputGroup>
-                            </Col>
-                            <Col span={5}>
-                                <InputGroup compacts>
-                                    <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.cytology_from.show} />
-                                    <Select size="small" style={{width: '50%'}} defaultValue="">
-                                        <Option value="本院">本院</Option>
-                                        <Option value="外院">外院</Option>
-                                    </Select>
-                                </InputGroup>
-                            </Col>
-                            <Col span={13}>
-                                <InputGroup compact >
-                                    <Input disabled style={{width: '15%'}} defaultValue={TreatRecord.cytology_report.show} />
-                                    <Input style={{width: '85%'}} defaultValue="" />
-                                </InputGroup>
-                            </Col>
-                        </InputGroup>
-                    </Col>
-                </Row>
+    //             <Row>
+    //                 <Col span={2} style={{marginTop: 5}}>
+    //                     {TreatRecord.cytology.show}
+    //                 </Col>
+    //                 <Col span={22}>
+    //                     <InputGroup size="small" className={styles.infoRow}>
+    //                         <Col span={6}>
+    //                             <InputGroup compact >
+    //                                 <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.cytology_date.show} />
+    //                                 <DatePicker style={{width: '70%'}}/>
+    //                             </InputGroup>
+    //                         </Col>
+    //                         <Col span={5}>
+    //                             <InputGroup compacts>
+    //                                 <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.cytology_from.show} />
+    //                                 <Select size="small" style={{width: '50%'}} defaultValue="">
+    //                                     <Option value="本院">本院</Option>
+    //                                     <Option value="外院">外院</Option>
+    //                                 </Select>
+    //                             </InputGroup>
+    //                         </Col>
+    //                         <Col span={13}>
+    //                             <InputGroup compact >
+    //                                 <Input disabled style={{width: '15%'}} defaultValue={TreatRecord.cytology_report.show} />
+    //                                 <Input style={{width: '85%'}} defaultValue="" />
+    //                             </InputGroup>
+    //                         </Col>
+    //                     </InputGroup>
+    //                 </Col>
+    //             </Row>
 
-                <Row>
-                    <Col span={2} style={{marginTop: 5}}>
-                        {TreatRecord.HPV.show}
-                    </Col>
-                    <Col span={22}>
-                        <InputGroup size="small" className={styles.infoRow}>
-                            <Col span={6}>
-                                <InputGroup compact >
-                                    <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.HPV_date.show} />
-                                    <DatePicker style={{width: '70%'}}/>
-                                </InputGroup>
-                            </Col>
-                            <Col span={5}>
-                                <InputGroup compacts>
-                                    <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.HPV_from.show} />
-                                    <Select size="small" style={{width: '50%'}} defaultValue="">
-                                        <Option value="本院">本院</Option>
-                                        <Option value="外院">外院</Option>
-                                    </Select>
-                                </InputGroup>
-                            </Col>
-                            <Col span={13}>
-                                <InputGroup compact >
-                                    <Input disabled style={{width: '15%'}} defaultValue={TreatRecord.HPV_report.show} />
-                                    <Input style={{width: '85%'}} defaultValue="" />
-                                </InputGroup>
-                            </Col>
-                        </InputGroup>
-                    </Col>
-                </Row>
+    //             <Row>
+    //                 <Col span={2} style={{marginTop: 5}}>
+    //                     {TreatRecord.HPV.show}
+    //                 </Col>
+    //                 <Col span={22}>
+    //                     <InputGroup size="small" className={styles.infoRow}>
+    //                         <Col span={6}>
+    //                             <InputGroup compact >
+    //                                 <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.HPV_date.show} />
+    //                                 <DatePicker style={{width: '70%'}}/>
+    //                             </InputGroup>
+    //                         </Col>
+    //                         <Col span={5}>
+    //                             <InputGroup compacts>
+    //                                 <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.HPV_from.show} />
+    //                                 <Select size="small" style={{width: '50%'}} defaultValue="">
+    //                                     <Option value="本院">本院</Option>
+    //                                     <Option value="外院">外院</Option>
+    //                                 </Select>
+    //                             </InputGroup>
+    //                         </Col>
+    //                         <Col span={13}>
+    //                             <InputGroup compact >
+    //                                 <Input disabled style={{width: '15%'}} defaultValue={TreatRecord.HPV_report.show} />
+    //                                 <Input style={{width: '85%'}} defaultValue="" />
+    //                             </InputGroup>
+    //                         </Col>
+    //                     </InputGroup>
+    //                 </Col>
+    //             </Row>
 
-                <Row>
-                    <Col span={2} style={{marginTop: 5}}>
-                        {TreatRecord.imaging.show}
-                    </Col>
-                    <Col span={22}>
-                        <InputGroup size="small" className={styles.infoRow}>
-                            <Col span={6}>
-                                <InputGroup compact >
-                                    <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.imaging_date.show} />
-                                    <DatePicker style={{width: '70%'}}/>
-                                </InputGroup>
-                            </Col>
-                            <Col span={5}>
-                                <InputGroup compacts>
-                                    <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.imaging_from.show} />
-                                    <Select size="small" style={{width: '50%'}} defaultValue="">
-                                        <Option value="本院">本院</Option>
-                                        <Option value="外院">外院</Option>
-                                    </Select>
-                                </InputGroup>
-                            </Col>
-                            <Col span={5}>
-                                <InputGroup compact >
-                                    <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.imaging_id.show} />
-                                    <Input style={{width: '70%'}} defaultValue="" />
-                                </InputGroup>
-                            </Col>
-                            <Col span={8}>
-                                <InputGroup compact >
-                                    <Input disabled style={{width: '20%'}} defaultValue={TreatRecord.imaging_report.show} />
-                                    <Input style={{width: '80%'}} defaultValue="" />
-                                </InputGroup>
-                            </Col>
-                        </InputGroup>
-                    </Col>
-                </Row>
+    //             <Row>
+    //                 <Col span={2} style={{marginTop: 5}}>
+    //                     {TreatRecord.imaging.show}
+    //                 </Col>
+    //                 <Col span={22}>
+    //                     <InputGroup size="small" className={styles.infoRow}>
+    //                         <Col span={6}>
+    //                             <InputGroup compact >
+    //                                 <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.imaging_date.show} />
+    //                                 <DatePicker style={{width: '70%'}}/>
+    //                             </InputGroup>
+    //                         </Col>
+    //                         <Col span={5}>
+    //                             <InputGroup compacts>
+    //                                 <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.imaging_from.show} />
+    //                                 <Select size="small" style={{width: '50%'}} defaultValue="">
+    //                                     <Option value="本院">本院</Option>
+    //                                     <Option value="外院">外院</Option>
+    //                                 </Select>
+    //                             </InputGroup>
+    //                         </Col>
+    //                         <Col span={5}>
+    //                             <InputGroup compact >
+    //                                 <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.imaging_id.show} />
+    //                                 <Input style={{width: '70%'}} defaultValue="" />
+    //                             </InputGroup>
+    //                         </Col>
+    //                         <Col span={8}>
+    //                             <InputGroup compact >
+    //                                 <Input disabled style={{width: '20%'}} defaultValue={TreatRecord.imaging_report.show} />
+    //                                 <Input style={{width: '80%'}} defaultValue="" />
+    //                             </InputGroup>
+    //                         </Col>
+    //                     </InputGroup>
+    //                 </Col>
+    //             </Row>
 
-                <Row>
-                    <Col span={2} style={{marginTop: 5}}>
-                        {TreatRecord.histology.show}
-                    </Col>
-                    <Col span={22}>
-                        <InputGroup size="small" className={styles.infoRow}>
-                            <Col span={6}>
-                                <InputGroup compact >
-                                    <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.histology_date.show} />
-                                    <DatePicker style={{width: '70%'}}/>
-                                </InputGroup>
-                            </Col>
-                            <Col span={5}>
-                                <InputGroup compacts>
-                                    <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.histology_from.show} />
-                                    <Select size="small" style={{width: '50%'}} defaultValue="">
-                                        <Option value="本院">本院</Option>
-                                        <Option value="外院">外院</Option>
-                                    </Select>
-                                </InputGroup>
-                            </Col>
-                            <Col span={5}>
-                                <InputGroup compact >
-                                    <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.histology_id.show} />
-                                    <Input style={{width: '70%'}} defaultValue="" />
-                                </InputGroup>
-                            </Col>
-                            <Col span={8}>
-                                <InputGroup compact >
-                                    <Input disabled style={{width: '20%'}} defaultValue={TreatRecord.histology_report.show} />
-                                    <Input style={{width: '80%'}} defaultValue="" />
-                                </InputGroup>
-                            </Col>
-                        </InputGroup>
-                    </Col>
-                </Row>
+    //             <Row>
+    //                 <Col span={2} style={{marginTop: 5}}>
+    //                     {TreatRecord.histology.show}
+    //                 </Col>
+    //                 <Col span={22}>
+    //                     <InputGroup size="small" className={styles.infoRow}>
+    //                         <Col span={6}>
+    //                             <InputGroup compact >
+    //                                 <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.histology_date.show} />
+    //                                 <DatePicker style={{width: '70%'}}/>
+    //                             </InputGroup>
+    //                         </Col>
+    //                         <Col span={5}>
+    //                             <InputGroup compacts>
+    //                                 <Input disabled style={{width: '50%'}} defaultValue={TreatRecord.histology_from.show} />
+    //                                 <Select size="small" style={{width: '50%'}} defaultValue="">
+    //                                     <Option value="本院">本院</Option>
+    //                                     <Option value="外院">外院</Option>
+    //                                 </Select>
+    //                             </InputGroup>
+    //                         </Col>
+    //                         <Col span={5}>
+    //                             <InputGroup compact >
+    //                                 <Input disabled style={{width: '30%'}} defaultValue={TreatRecord.histology_id.show} />
+    //                                 <Input style={{width: '70%'}} defaultValue="" />
+    //                             </InputGroup>
+    //                         </Col>
+    //                         <Col span={8}>
+    //                             <InputGroup compact >
+    //                                 <Input disabled style={{width: '20%'}} defaultValue={TreatRecord.histology_report.show} />
+    //                                 <Input style={{width: '80%'}} defaultValue="" />
+    //                             </InputGroup>
+    //                         </Col>
+    //                     </InputGroup>
+    //                 </Col>
+    //             </Row>
 
-                <Collapse defaultActiveKey={[]} onChange={this.cb_TreatCollapse}style={{marginTop: 16}}>
-                    {this.renderColposcopy()}
-                    {this.renderTreat()}
-                </Collapse>
-            </Panel>
-        );
-    }
+    //             <Collapse defaultActiveKey={[]} onChange={this.cb_TreatCollapse}style={{marginTop: 16}}>
+    //                 {this.renderColposcopy()}
+    //                 {this.renderTreat()}
+    //             </Collapse>
+    //         </Panel>
+    //     );
+    // }
 
 
-    renderColposcopy() {
-        const text = "12121212";
+    renderColposcopy(data, index) {
+        const {actions} = this.props;
         return (
             <Panel style={InnerPanelStyle} header="阴道镜">
 
                 <InputGroup size="small" className={styles.infoRow}>
-                    <DatePicker style={{width: '20%'}}/>
+                    <DatePicker style={{width: '20%'}}
+                        defaultValue={data.date==''? null: moment(data.date, dateFormat)}
+                        onChange={
+                            (date, dateString) => {
+                                actions.pa_editSelPatientColposcopy({
+                                    modify: {
+                                        date: dateString,
+                                    },
+                                    index: index,
+                                });
+                            }
+                        }
+                    />
                 </InputGroup>
 
                 <InputGroup size="small" className={styles.infoRow}>
@@ -831,7 +994,14 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compacts>
                             <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.cervixExpose.show} />
-                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                            <Select size="small" style={{width: '50%'}} defaultValue={data.cervixExpose} onChange={(value) => {
+                                actions.pa_editSelPatientColposcopy({
+                                    modify: {
+                                        cervixExpose: value,
+                                            },
+                                    index: index,
+                                });
+                            }}>
                                 <Option value="充分">充分</Option>
                                 <Option value="不充分">不充分</Option>
                             </Select>
@@ -840,10 +1010,17 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.conversionAreaType.show} />
-                            <Select size="small" style={{width: '50%'}} defaultValue="">
-                                <Option value="type1">Ⅰ型</Option>
-                                <Option value="type2">Ⅱ型</Option>
-                                <Option value="type3">Ⅲ型</Option>
+                            <Select size="small" style={{width: '50%'}} defaultValue={data.conversionAreaType} onChange={(value) => {
+                                actions.pa_editSelPatientColposcopy({
+                                    modify: {
+                                        conversionAreaType: value,
+                                            },
+                                    index: index,
+                                });
+                            }}>
+                                <Option value="Ⅰ型">Ⅰ型</Option>
+                                <Option value="Ⅱ型">Ⅱ型</Option>
+                                <Option value="Ⅲ型">Ⅲ型</Option>
                             </Select>
                         </InputGroup>
                     </Col>
@@ -853,7 +1030,14 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.vinegarWhite.show} />
-                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                            <Select size="small" style={{width: '50%'}} defaultValue={data.vinegarWhite} onChange={(value) => {
+                                actions.pa_editSelPatientColposcopy({
+                                    modify: {
+                                        vinegarWhite: value,
+                                            },
+                                    index: index,
+                                });
+                            }}>
                                 <Option value="厚">厚</Option>
                                 <Option value="薄">薄</Option>
                                 <Option value="无">无</Option>
@@ -863,7 +1047,14 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compacts>
                             <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.glandCleft.show} />
-                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                            <Select size="small" style={{width: '50%'}} defaultValue={data.glandCleft} onChange={(value) => {
+                                actions.pa_editSelPatientColposcopy({
+                                    modify: {
+                                        glandCleft: value,
+                                            },
+                                    index: index,
+                                });
+                            }}>
                                 <Option value="低级别">低级别</Option>
                                 <Option value="高级别">高级别</Option>
                             </Select>
@@ -872,7 +1063,14 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.vessel.show} />
-                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                            <Select size="small" style={{width: '50%'}} defaultValue={data.vessel} onChange={(value) => {
+                                actions.pa_editSelPatientColposcopy({
+                                    modify: {
+                                        vessel: value,
+                                            },
+                                    index: index,
+                                });
+                            }}>
                                 <Option value="细点状">细点状</Option>
                                 <Option value="粗点状">粗点状</Option>
                             </Select>
@@ -884,7 +1082,14 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.inlay.show} />
-                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                            <Select size="small" style={{width: '50%'}} defaultValue={data.inlay} onChange={(value) => {
+                                actions.pa_editSelPatientColposcopy({
+                                    modify: {
+                                        inlay: value,
+                                            },
+                                    index: index,
+                                });
+                            }}>
                                 <Option value="粗">粗</Option>
                                 <Option value="细">细</Option>
                             </Select>
@@ -893,7 +1098,14 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compacts>
                             <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.unusualVessel.show} />
-                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                            <Select size="small" style={{width: '50%'}} defaultValue={data.unusualVessel} onChange={(value) => {
+                                actions.pa_editSelPatientColposcopy({
+                                    modify: {
+                                        unusualVessel: value,
+                                            },
+                                    index: index,
+                                });
+                            }}>
                                 <Option value="有">有</Option>
                                 <Option value="无">无</Option>
                             </Select>
@@ -902,7 +1114,14 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '50%'}} defaultValue={Colposcopy.iodine.show} />
-                            <Select size="small" style={{width: '50%'}} defaultValue="">
+                            <Select size="small" style={{width: '50%'}} defaultValue={data.iodine} onChange={(value) => {
+                                actions.pa_editSelPatientColposcopy({
+                                    modify: {
+                                        iodine: value,
+                                            },
+                                    index: index,
+                                });
+                            }}>
                                 <Option value="着色">着色</Option>
                                 <Option value="不着色">不着色</Option>
                             </Select>
@@ -914,19 +1133,46 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '20%'}} defaultValue={Colposcopy.vagina.show} />
-                            <Input style={{width: '80%'}} defaultValue="" />
+                            <Input style={{width: '80%'}} defaultValue="" value={data.vagina} onChange={(e) => {
+                                    actions.pa_editSelPatientColposcopy({
+                                        modify: {
+                                            vagina: e.target.value,
+                                                },
+                                        index: index,   
+                                        }
+                                    );
+                                }}
+                            />
                         </InputGroup>
                     </Col>
                     <Col span={8}>
                         <InputGroup compacts>
                             <Input disabled style={{width: '20%'}} defaultValue={Colposcopy.vulva.show} />
-                            <Input style={{width: '80%'}} defaultValue="" />
+                            <Input style={{width: '80%'}} defaultValue="" value={data.vulva} onChange={(e) => {
+                                    actions.pa_editSelPatientColposcopy({
+                                        modify: {
+                                            vulva: e.target.value,
+                                                },
+                                        index: index,   
+                                        }
+                                    );
+                                }}
+                            />
                         </InputGroup>
                     </Col>
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '30%'}} defaultValue={Colposcopy.microscopicImage.show} />
-                            <Input style={{width: '70%'}} defaultValue="" />
+                            <Input style={{width: '70%'}} defaultValue="" value={data.microscopicImage} onChange={(e) => {
+                                    actions.pa_editSelPatientColposcopy({
+                                        modify: {
+                                            microscopicImage: e.target.value,
+                                                },
+                                        index: index,   
+                                        }
+                                    );
+                                }}
+                            />
                         </InputGroup>
                     </Col>
                 </InputGroup>
@@ -934,11 +1180,24 @@ class PatientPage extends Component<Props> {
         );
     }
 
-    renderTreat() {
+    renderTreat(data, index) {
+        const {actions} = this.props;
         return (
             <Panel style={InnerPanelStyle} header="治疗">
                 <InputGroup size="small" className={styles.infoRow}>
-                    <DatePicker style={{width: '20%'}}/>
+                    <DatePicker style={{width: '20%'}} 
+                    defaultValue={data.date==''? null: moment(data.date, dateFormat)}
+                        onChange={
+                            (date, dateString) => {
+                                actions.pa_editSelPatientTreat({
+                                    modify: {
+                                        date: dateString,
+                                    },
+                                    index: index,
+                                });
+                            }
+                        }
+                    />
                 </InputGroup>
 
                 <Row>
@@ -950,19 +1209,48 @@ class PatientPage extends Component<Props> {
                             <Col span={8}>
                                 <InputGroup compact >
                                     <Input disabled style={{width: '30%'}} defaultValue={Treat.laser_place.show} />
-                                    <Input style={{width: '70%'}} defaultValue="" />
+                                    <Input style={{width: '70%'}} defaultValue="" value={data.laser_place} 
+                                        onChange={(e) => {
+                                            actions.pa_editSelPatientTreat({
+                                                modify: {
+                                                    laser_place: e.target.value,
+                                                        },
+                                                index: index,   
+                                                }
+                                            );
+                                        }}
+                                    />  
                                 </InputGroup>
                             </Col>
                             <Col span={8}>
                                 <InputGroup compacts>
                                     <Input disabled style={{width: '30%'}} defaultValue={Treat.laser_area.show} />
-                                    <Input style={{width: '70%'}} defaultValue="" />
+                                    <Input style={{width: '70%'}} defaultValue="" value={data.laser_area} onChange={(e) => {
+                                            actions.pa_editSelPatientTreat({
+                                                modify: {
+                                                    laser_area: e.target.value,
+                                                        },
+                                                index: index,   
+                                                }
+                                            );
+                                        }}
+                                    />  
                                 </InputGroup>
                             </Col>
                             <Col span={8}>
                                 <InputGroup compact >
                                     <Input disabled style={{width: '30%'}} defaultValue={Treat.laser_other.show} />
-                                    <Input style={{width: '70%'}} defaultValue="" />
+                                    <Input style={{width: '70%'}} defaultValue="" value={data.laser_other} 
+                                        onChange={(e) => {
+                                            actions.pa_editSelPatientTreat({
+                                                modify: {
+                                                    laser_other: e.target.value,
+                                                        },
+                                                index: index,   
+                                                }
+                                            );
+                                        }}
+                                    />  
                                 </InputGroup>
                             </Col>
                         </InputGroup>
@@ -978,19 +1266,49 @@ class PatientPage extends Component<Props> {
                             <Col span={8}>
                                 <InputGroup compact >
                                     <Input disabled style={{width: '30%'}} defaultValue={Treat.LEEP_1_length.show} />
-                                    <Input style={{width: '70%'}} defaultValue="" addonAfter="cm"/>
+                                    <Input style={{width: '70%'}} defaultValue="" addonAfter="cm" value={data.LEEP_1_length} 
+                                        onChange={(e) => {
+                                            actions.pa_editSelPatientTreat({
+                                                modify: {
+                                                    LEEP_1_length: e.target.value,
+                                                        },
+                                                index: index,   
+                                                }
+                                            );
+                                        }}
+                                    />  
                                 </InputGroup>
                             </Col>
                             <Col span={8}>
                                 <InputGroup compacts>
                                     <Input disabled style={{width: '30%'}} defaultValue={Treat.LEEP_1_diameter.show} />
-                                    <Input style={{width: '70%'}} defaultValue="" addonAfter="cm"/>
+                                    <Input style={{width: '70%'}} defaultValue="" addonAfter="cm" value={data.LEEP_1_diameter} 
+                                        onChange={(e) => {
+                                            actions.pa_editSelPatientTreat({
+                                                modify: {
+                                                    LEEP_1_diameter: e.target.value,
+                                                        },
+                                                index: index,   
+                                                }
+                                            );
+                                        }}
+                                    />  
                                 </InputGroup>
                             </Col>
                             <Col span={8}>
                                 <InputGroup compact >
                                     <Input disabled style={{width: '30%'}} defaultValue={Treat.LEEP_1_thickness.show} />
-                                    <Input style={{width: '70%'}} defaultValue="" addonAfter="cm"/>
+                                    <Input style={{width: '70%'}} defaultValue="" addonAfter="cm" value={data.LEEP_1_thickness} 
+                                        onChange={(e) => {
+                                            actions.pa_editSelPatientTreat({
+                                                modify: {
+                                                    LEEP_1_thickness: e.target.value,
+                                                        },
+                                                index: index,   
+                                                }
+                                            );
+                                        }}
+                                    />  
                                 </InputGroup>
                             </Col>
                         </InputGroup>
@@ -1004,7 +1322,17 @@ class PatientPage extends Component<Props> {
                             <Col span={24}>
                                 <InputGroup compact >
                                     <Input disabled style={{width: '20%'}} defaultValue={Treat.LEEP_2.show} />
-                                    <Input style={{width: '80%'}} defaultValue="" />
+                                    <Input style={{width: '80%'}} defaultValue="" value={data.LEEP_2} 
+                                        onChange={(e) => {
+                                            actions.pa_editSelPatientTreat({
+                                                modify: {
+                                                    LEEP_2: e.target.value,
+                                                        },
+                                                index: index,   
+                                                }
+                                            );
+                                        }}
+                                    />  
                                 </InputGroup>
                             </Col>
                         </InputGroup>
@@ -1018,7 +1346,17 @@ class PatientPage extends Component<Props> {
                             <Col span={24}>
                                 <InputGroup compact >
                                     <Input disabled style={{width: '20%'}} defaultValue={Treat.LEEP_other.show} />
-                                    <Input style={{width: '80%'}} defaultValue="" />
+                                    <Input style={{width: '80%'}} defaultValue="" value={data.LEEP_other} 
+                                        onChange={(e) => {
+                                            actions.pa_editSelPatientTreat({
+                                                modify: {
+                                                    LEEP_other: e.target.value,
+                                                        },
+                                                index: index,   
+                                                }
+                                            );
+                                        }}
+                                    />  
                                 </InputGroup>
                             </Col>
                         </InputGroup>
@@ -1031,7 +1369,17 @@ class PatientPage extends Component<Props> {
                     <Col span={22}>
                         <InputGroup size="small" className={styles.infoRow}>
                             <Col span={24}>
-                                    <Input style={{width: '100%'}} defaultValue="" />
+                                    <Input style={{width: '100%'}} defaultValue="" value={data.other} 
+                                        onChange={(e) => {
+                                            actions.pa_editSelPatientTreat({
+                                                modify: {
+                                                    other: e.target.value,
+                                                        },
+                                                index: index,   
+                                                }
+                                            );
+                                        }}
+                                    />  
                             </Col>
                         </InputGroup>
                     </Col>

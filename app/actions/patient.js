@@ -35,7 +35,7 @@ export const pa_delSelPatientRecord = createAction(at.PA_SEL_PATIENT_DEL_RECORD,
 });
 
 
-export const pa_editSelPatientOutPatient = createAction(at.PA_SEL_PATIENT_EDIT_OUT_PATIENT, (data) => {
+export const pa_editSelPatientTreatRecord = createAction(at.PA_SEL_PATIENT_EDIT_TREAT_RECORD, (data) => {
 	return data;
 });
 

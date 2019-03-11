@@ -165,7 +165,7 @@ export default function (state :State = initialState, action: any) {
 				}
 			};
 		}
-		case at.PA_SEL_PATIENT_EDIT_OUT_PATIENT: {
+		case at.PA_SEL_PATIENT_EDIT_TREAT_RECORD: {
 			const {modify, index} = payload;
 			const {selPatientInfo} = state;
 			const {treatRecordList} = selPatientInfo;
@@ -195,7 +195,7 @@ export default function (state :State = initialState, action: any) {
 			};
 			treatRecord.colposcopy = {
 				...treatRecord.colposcopy,
-				modify,
+				...modify,
 			};
 			newTreatRecordList[index] = treatRecord;
 			return {
@@ -217,7 +217,7 @@ export default function (state :State = initialState, action: any) {
 			};
 			treatRecord.treat = {
 				...treatRecord.treat,
-				modify,
+				...modify,
 			};
 			newTreatRecordList[index] = treatRecord;
 			return {
