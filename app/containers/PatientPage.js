@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import { Button, Layout, Menu, Breadcrumb, Icon, Row, Col, Divider, Input,
-    Tooltip, Table, Tag, Select, InputNumber, DatePicker, Collapse,
+    Tooltip, Table, Tag, Select, InputNumber, DatePicker, Collapse, message,
 } from 'antd';
 import connectComponent from '../utils/connectComponent';
 
@@ -27,17 +27,18 @@ const FileSync = require('lowdb/adapters/FileSync')
 const adapter = new FileSync('db.json')
 const db = low(adapter)
 
-db.defaults({ posts: [] })
+db.defaults({ patients: [] })
   .write()
+const dbpatients = db.get('patients');
 
-const result = db.get('posts')
-  .push({ title: 123 })
-  .write()
+// const result = db.get('posts')
+//   .push({ title: 123 })
+//   .write();
 
-console.log(result)
-
+// console.log(result)
+// const r2 = db.get('posts').find({title: 123}).take(5).value();
+// console.log(r2);
 // ////////////////////////////////////////////////
-
 
 
 
@@ -48,7 +49,7 @@ type Props = {
 
 type State = {
     showDetail: boolean,
-
+    newOrUpdate: boolean,
     curPatientInfo: PatientInfo
 };
 
@@ -104,19 +105,22 @@ class PatientPage extends Component<Props> {
     constructor(props: Props) {
         super(props);
 
+        const {actions} = props;
+
         this.state = {
             showDetail: false,
+            newOrUpdate: false,
             windowHeight: window.innerHeight,
         };
 
         this.columns = [
-            { title: BaseInfo.id.show, width: 100, dataIndex: 'base.id', key: 'id', fixed: 'left' },
-            { title: BaseInfo.name.show, width: 100, dataIndex: 'base.name', key: 'name', fixed: 'left' },
-            { title: BaseInfo.age.show, width: 70, dataIndex: 'base.age', key: 'age', fixed: 'left' },
-            { title: BaseInfo.firstDiagnose.show, width: 150, dataIndex: 'base.firstDiagnose', key: 'firstDiagnose'},
-            { title: BaseInfo.lastDiagnose.show, width: 150, dataIndex: 'base.lastDiagnose', key: 'lastDiagnose'},
-            { title: BaseInfo.cardId.show, width: 200, dataIndex: 'base.cardId', key: 'cardId'},
-            { title: BaseInfo.phone.show, dataIndex: 'base.phone', key: 'phone'},
+            { title: BaseInfo.id.show, width: 100, dataIndex: 'id', key: 'id', fixed: 'left' },
+            { title: BaseInfo.name.show, width: 100, dataIndex: 'name', key: 'name', fixed: 'left' },
+            { title: BaseInfo.age.show, width: 70, dataIndex: 'age', key: 'age', fixed: 'left' },
+            { title: BaseInfo.firstDiagnose.show, width: 150, dataIndex: 'firstDiagnose', key: 'firstDiagnose'},
+            { title: BaseInfo.lastDiagnose.show, width: 150, dataIndex: 'lastDiagnose', key: 'lastDiagnose'},
+            { title: BaseInfo.cardId.show, width: 200, dataIndex: 'cardId', key: 'cardId'},
+            { title: BaseInfo.phone.show, dataIndex: 'phone', key: 'phone'},
             // {
             //     title: 'Tags',
             //     key: 'tags',
@@ -150,6 +154,7 @@ class PatientPage extends Component<Props> {
             })
         }
 
+        actions.pa_getPatientList();
     }
 
     render() {
@@ -198,12 +203,14 @@ class PatientPage extends Component<Props> {
         actions.pa_newPatientInfo();
         this.setState({
             showDetail: true,
+            newOrUpdate: true,
         });
     }
 
     renderTable() {
+        const {patientInfoList} = this.props;
         return (
-            <Table columns={this.columns} dataSource={data} 
+            <Table columns={this.columns} dataSource={patientInfoList} 
             scroll={{x: 1000,
             y: this.state.windowHeight - 155}} bordered
              size="small" onSelect={this.onClickShowDetail.bind(this)}
@@ -211,9 +218,36 @@ class PatientPage extends Component<Props> {
         )
     }
 
+    onClickSavePatient() {
+        const {selPatientInfo, actions} = this.props;
+        // const {id} = selPatientInfo;
+        // if (id == null) {
+        //     console.error('invalid id==null');
+        // }
+
+        // if (this.state.newOrUpdate) {
+        //     if (dbpatients.find({id}) != null) {
+        //         console.warn('has id, save failed');
+        //         return;
+        //     }
+        // } 
+
+        // dbpatients.push(selPatientInfo);
+        actions.pa_savePatientInfo({selPatientInfo, isNew: this.state.newOrUpdate,
+            retFn: ({success, msg}) => {
+                if (success) {
+                    message.success(msg, 1);
+                } else {
+                    message.warning(msg, 1);
+                }
+            }
+        });
+    }
+
     onClickShowDetail(item) {
         this.setState({
             showDetail: true,
+            newOrUpdate: false,
         });
         console.log('click item');
     }
@@ -237,8 +271,8 @@ class PatientPage extends Component<Props> {
                         onClick={() => this.onClickHideDetail()}
                     >关闭</Button>
                     <Button type="primary" style={{marginRight: 8}} size="small" icon="save"
-                        onClick={() => this.onClickHideDetail()}
-                    >保存</Button>
+                        onClick={() => this.onClickSavePatient()}
+                    >{this.state.newOrUpdate? '保存': '更新'}</Button>
                     <Button type="danger" style={{marginRight: 8}} size="small" icon="delete"
                         onClick={() => this.onClickHideDetail()}
                     >删除</Button>
@@ -271,14 +305,13 @@ class PatientPage extends Component<Props> {
         if (selPatientInfo == null) {
             return;
         }
-        const {base} = selPatientInfo;
         return (
             <div className={styles.detailContent} style={{height: this.state.windowHeight - 60}}>
                 <InputGroup size="small" className={styles.infoRow}>
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.name.show} />
-                            <Input style={{width: '60%'}} defaultValue="" value={base.name} onChange={(e) => {
+                            <Input style={{width: '60%'}} defaultValue="" value={selPatientInfo.name} onChange={(e) => {
                                 actions.pa_editSelPatientBase({
                                     name: e.target.value,
                                 });
@@ -289,7 +322,7 @@ class PatientPage extends Component<Props> {
                         <InputGroup compacts>
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.birthDate.show} />
                             {/* <Input style={{width: '60%'}} defaultValue="" /> */}
-                            <DatePicker style={{width: '60%'}} defaultValue={base.birthDate==''? null: moment(base.birthDate, dateFormat)}
+                            <DatePicker style={{width: '60%'}} defaultValue={selPatientInfo.birthDate==''? null: moment(selPatientInfo.birthDate, dateFormat)}
                             onChange={
                                 (date, dateString) => {
                                     console.log(date, dateString);
@@ -306,7 +339,7 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.age.show} />
-                            <Input disabled style={{width: '60%'}} defaultValue="24" value={base.age}/>
+                            <Input disabled style={{width: '60%'}} defaultValue="24" value={selPatientInfo.age}/>
                         </InputGroup>
                     </Col>
                 </InputGroup>
@@ -315,7 +348,7 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.id.show} />
-                            <Input size="small" style={{width: '60%'}} value={base.id} onChange={(e) => {
+                            <Input size="small" style={{width: '60%'}} value={selPatientInfo.id} onChange={(e) => {
                                     actions.pa_editSelPatientBase({
                                         id: e.target.value,
                                     });
@@ -331,7 +364,7 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.phone.show} />
-                            <InputNumber size="small" style={{width: '60%'}} value={base.phone} onChange={(v) => {
+                            <InputNumber size="small" style={{width: '60%'}} value={selPatientInfo.phone} onChange={(v) => {
                                     actions.pa_editSelPatientBase({
                                         phone: v,
                                     });
@@ -345,7 +378,7 @@ class PatientPage extends Component<Props> {
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.nation.show} />
                             <Input style={{width: '60%'}} defaultValue="" 
-                                value={base.nation} onChange={(e) => {
+                                value={selPatientInfo.nation} onChange={(e) => {
                                     actions.pa_editSelPatientBase({
                                         nation: e.target.value,
                                     });
@@ -356,8 +389,8 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compacts>
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.occupation.show} />
-                            <Input style={{width: '60%'}} defaultValue={base.occupation} 
-                                value={base.occupation} onChange={(e) => {
+                            <Input style={{width: '60%'}} defaultValue={selPatientInfo.occupation} 
+                                value={selPatientInfo.occupation} onChange={(e) => {
                                     actions.pa_editSelPatientBase({
                                         occupation: e.target.value,
                                     });
@@ -369,7 +402,7 @@ class PatientPage extends Component<Props> {
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.smoking.show} />
                             {/* <Input style={{width: '60%'}} defaultValue="" /> */}
-                            <Select size="small" style={{width: '60%'}} defaultValue={base.smoking} onChange={(value) => {
+                            <Select size="small" style={{width: '60%'}} defaultValue={selPatientInfo.smoking} onChange={(value) => {
                                 actions.pa_editSelPatientBase({
                                     smoking: value,
                                 });
@@ -385,7 +418,7 @@ class PatientPage extends Component<Props> {
                     <Col span={6}>
                         <InputGroup compact >
                             <Input disabled style={{width: '60%'}} defaultValue={BaseInfo.firstMlAge.show} />
-                            <InputNumber size="small" style={{width: '40%'}} value={base.firstMlAge} onChange={(value) => {
+                            <InputNumber size="small" style={{width: '40%'}} value={selPatientInfo.firstMlAge} onChange={(value) => {
                                     actions.pa_editSelPatientBase({
                                         firstMlAge: value,
                                     });
@@ -395,7 +428,7 @@ class PatientPage extends Component<Props> {
                     <Col span={6}>
                         <InputGroup compacts>
                             <Input disabled style={{width: '60%'}} defaultValue={BaseInfo.pregnantTimes.show} />
-                            <InputNumber size="small" style={{width: '40%'}} value={base.pregnantTimes} onChange={(value) => {
+                            <InputNumber size="small" style={{width: '40%'}} value={selPatientInfo.pregnantTimes} onChange={(value) => {
                                     actions.pa_editSelPatientBase({
                                         pregnantTimes: value,
                                     });
@@ -405,7 +438,7 @@ class PatientPage extends Component<Props> {
                     <Col span={6}>
                         <InputGroup compact >
                             <Input disabled style={{width: '60%'}} defaultValue={BaseInfo.produceChildTimes.show} />
-                            <InputNumber size="small" style={{width: '40%'}} value={base.produceChildTimes} onChange={(value) => {
+                            <InputNumber size="small" style={{width: '40%'}} value={selPatientInfo.produceChildTimes} onChange={(value) => {
                                     actions.pa_editSelPatientBase({
                                         produceChildTimes: value,
                                     });
@@ -415,7 +448,7 @@ class PatientPage extends Component<Props> {
                     <Col span={6}>
                         <InputGroup compact >
                             <Input disabled style={{width: '60%'}} defaultValue={BaseInfo.abortionTimes.show} />
-                            <InputNumber size="small" style={{width: '40%'}} value={base.abortionTimes} onChange={(value) => {
+                            <InputNumber size="small" style={{width: '40%'}} value={selPatientInfo.abortionTimes} onChange={(value) => {
                                     actions.pa_editSelPatientBase({
                                         abortionTimes: value,
                                     });
@@ -428,7 +461,7 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.familyHistory.show} />
-                            <Input style={{width: '60%'}} defaultValue="" value={base.familyHistory} onChange={(e) => {
+                            <Input style={{width: '60%'}} defaultValue="" value={selPatientInfo.familyHistory} onChange={(e) => {
                                     actions.pa_editSelPatientBase({
                                         familyHistory: e.target.value,
                                     });
@@ -438,7 +471,7 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compacts>
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.mlBleeding.show} />
-                            <Select size="small" style={{width: '60%'}} defaultValue={base.mlBleeding} onChange={(value) => {
+                            <Select size="small" style={{width: '60%'}} defaultValue={selPatientInfo.mlBleeding} onChange={(value) => {
                                 actions.pa_editSelPatientBase({
                                     mlBleeding: value,
                                 });
@@ -451,7 +484,7 @@ class PatientPage extends Component<Props> {
                     <Col span={8}>
                         <InputGroup compact >
                             <Input disabled style={{width: '40%'}} defaultValue={BaseInfo.contraceptionWay.show} />
-                            <Input style={{width: '60%'}} defaultValue="" value={base.contraceptionWay} onChange={(e) => {
+                            <Input style={{width: '60%'}} defaultValue="" value={selPatientInfo.contraceptionWay} onChange={(e) => {
                                     actions.pa_editSelPatientBase({
                                         contraceptionWay: e.target.value,
                                     });
@@ -464,7 +497,7 @@ class PatientPage extends Component<Props> {
                     <Col span={12}>
                         <InputGroup compact >
                             <Input disabled style={{width: '20%'}} defaultValue={BaseInfo.diagnose.show} />
-                            <Input style={{width: '80%'}} defaultValue="" value={base.diagnose} onChange={(e) => {
+                            <Input style={{width: '80%'}} defaultValue="" value={selPatientInfo.diagnose} onChange={(e) => {
                                     actions.pa_editSelPatientBase({
                                         diagnose: e.target.value,
                                     });
@@ -474,7 +507,7 @@ class PatientPage extends Component<Props> {
                     <Col span={12}>
                         <InputGroup compact >
                             <Input disabled style={{width: '20%'}} defaultValue={BaseInfo.other.show} />
-                            <Input style={{width: '80%'}} defaultValue="" value={base.other} onChange={(e) => {
+                            <Input style={{width: '80%'}} defaultValue="" value={selPatientInfo.other} onChange={(e) => {
                                     actions.pa_editSelPatientBase({
                                         other: e.target.value,
                                     });

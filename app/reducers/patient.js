@@ -5,6 +5,7 @@ import {PatientInfo, PatientTreatRecord, PatientColposcopy,
 import { pa_newPatientInfo } from '../actions/patient';
 
 import _ from 'lodash';
+import { stat } from 'fs-extra-p';
 
 type State = {
 	patientInfoList: Array<PatientInfo>,
@@ -18,29 +19,27 @@ const initialState: State = {
 
 function newPatientInfo(): PatientInfo {
 	return {
-		key: _.uniqueId(),
-		base: {
-			id: '',
-			name: '',
-			age: 0,
-			firstDiagnose: '无',
-			lastDiagnose: '无',
-			cardId: '',
-			phone: '',
-			birthDate: '',
-			diagnose: '',
-			nation: '',
-			occupation: '',
-			smoking: '否',
-			firstMlAge: 0,
-			pregnantTimes: 0,
-			produceChildTimes: 0,
-			abortionTimes: 0,
-			familyHistory: '',
-			mlBleeding: '否',
-			contraceptionWay: '',
-			other: '',
-		},
+		id: '',
+		name: '',
+		age: 0,
+		firstDiagnose: '无',
+		lastDiagnose: '无',
+		cardId: '',
+		phone: '',
+		birthDate: '',
+		diagnose: '',
+		nation: '',
+		occupation: '',
+		smoking: '否',
+		firstMlAge: 0,
+		pregnantTimes: 0,
+		produceChildTimes: 0,
+		abortionTimes: 0,
+		familyHistory: '',
+		mlBleeding: '否',
+		contraceptionWay: '',
+		other: '',
+
 		treatRecordList: [],
 	}
 }
@@ -107,7 +106,24 @@ export default function (state :State = initialState, action: any) {
 	const {payload ={}, error, meta={}, type} = action;
 
 	switch (action.type) {
-
+		case at.PA_GET_PATIENT_LIST: {
+			const {patientInfoList} = payload;
+			return {
+				...state,
+				patientInfoList, 
+			};
+		}
+		case at.PA_SEL_PATIENT_SAVE: {
+			const {success, patientInfoList} = payload;
+			if (success) {
+				return {
+					...state,
+					patientInfoList, 
+				};
+			} else {
+				return state;
+			}
+		}
 		case at.PA_NEW_PATIENT_INFO:
 			return {
 				...state,
@@ -115,15 +131,15 @@ export default function (state :State = initialState, action: any) {
 			}
 		case at.PA_SEL_PATIENT_EDIT_BASE: {
 			const {selPatientInfo} = state;
-			const {base} = selPatientInfo;
+			// const {base} = selPatientInfo;
 			return {
 				...state,
 				selPatientInfo: {
 					...selPatientInfo,
-					base: {
-						...base,
+					// base: {
+						// ...base,
 						...payload,
-					}
+					// }
 				}
 			}
 		}

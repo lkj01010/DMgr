@@ -6,7 +6,27 @@
 export type PatientInfo = {
     key: string;
 
-    base: PatientBaseInfo;
+    id: string;
+    name: string;
+    age: number;
+    firstDiagnose: string;
+    lastDiagnose: string;
+    cardId: string;
+    phone: string;
+    birthDate: string;
+    diagnose: string;
+    nation: string;
+    occupation: string;
+    smoking: string;
+    firstMlAage: number;
+    pregnantTimes: number;
+    produceChildTimes: number;
+    abortionTimes: number;
+    familyHistory: string;
+    mlBleeding: string;
+    contraceptionWay: string;
+    other: string;
+
     treatRecordList: Array<PatientTreatRecord>;
 };
 
