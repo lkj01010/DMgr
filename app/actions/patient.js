@@ -15,12 +15,12 @@ let ret = {};
 
 const refreshKeys = (array) => {
 	for(let i = 0; i < array.length; i++) {
-		array.key = i;
+		array[i].key = i;
 	}
 }
 
 export const pa_getPatientList = createAction(at.PA_GET_PATIENT_LIST, () => {
-	var patientInfoList = dbpatients.take(100).value();
+	var patientInfoList = dbpatients.sortBy('id').take(100).value();
 	refreshKeys(patientInfoList);
 	return {
 		patientInfoList,
@@ -65,7 +65,7 @@ export const pa_savePatientInfo = createAction(at.PA_SEL_PATIENT_SAVE, ({selPati
 		dbpatients.remove({id}).write();
 		dbpatients.push(selPatientInfo).write();
 	}
-	var patientInfoList = dbpatients.take(100).value();
+	var patientInfoList = dbpatients.sortBy('id').take(100).value();
 	refreshKeys(patientInfoList);
 	ret = {success: true, msg: '成功'};
 	return {
@@ -76,10 +76,51 @@ export const pa_savePatientInfo = createAction(at.PA_SEL_PATIENT_SAVE, ({selPati
 	retFn(ret);
 });
 
+export const pa_searchPatient = createAction(at.PA_SEARCH_PATIENT, ({syntax}) => {
+	if (syntax == undefined) {
+		ret = {success: false, msg: '搜索语法错误'};
+		return {
+			success: false,
+		};
+	}
+	let findRet = dbpatients.filter(syntax);
+	if (findRet != null) {
+		let patientInfoList = findRet.sortBy('id').take(100).value();
+		if (patientInfoList.length == 0) {
+			ret = {success: false, msg: '找到任何符合的结果'};
+			return {
+				success: false,
+			}
+		} else {
+			refreshKeys(patientInfoList);
+			ret = {success: true, msg: '成功'};
+			return {
+				success: true,
+				patientInfoList,
+			};
+		}
+	} else {
+		ret = {success: false, msg: '搜索语法错误'};
+		return {
+			success: false,
+		};
+	};
+}, ({retFn}) => {
+	retFn(ret);
+})
+
 export const pa_newPatientInfo = createAction(at.PA_NEW_PATIENT_INFO, () => {
 	return {
 	};
 });
+
+export const pa_selPatientInfo = createAction(at.PA_SEL_PATIENT_INFO, (record) => {
+	return record;
+});
+
+export const pa_delSelPatientInfo = createAction(at.PA_DELETE_PATIENT_INFO, (data) => {
+	return data;
+})
 
 export const pa_editSelPatientBase = createAction(at.PA_SEL_PATIENT_EDIT_BASE, (data) => {
 	return data;
@@ -90,9 +131,8 @@ export const pa_addSelPatientRecord = createAction(at.PA_SEL_PATIENT_ADD_RECORD,
 	};
 });
 
-export const pa_delSelPatientRecord = createAction(at.PA_SEL_PATIENT_DEL_RECORD, () => {
-	return {
-	};
+export const pa_delSelPatientRecord = createAction(at.PA_SEL_PATIENT_DEL_RECORD, (data) => {
+	return data;
 });
 
 

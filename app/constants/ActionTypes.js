@@ -1,7 +1,10 @@
 // app
 export const APP_EXIT = 'APP_EXIT';
 // patient
+export const PA_SEARCH_PATIENT = 'PA_SEARCH_PATIENT';
 export const PA_NEW_PATIENT_INFO = 'PA_NEW_PATIENT_INFO';
+export const PA_SEL_PATIENT_INFO = 'PA_SEL_PATIENT_INFO';
+export const PA_DELETE_PATIENT_INFO = 'PA_DELETE_PATIENT_INFO';
 
 export const PA_GET_PATIENT_LIST = 'PA_GET_PATIENT_LIST';
 

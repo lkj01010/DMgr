@@ -139,7 +139,7 @@ class PatientPage extends Component<Props> {
                 fixed: 'right',
                 render: (text, record) => (
                         <a href="javascript:;" onClick={() => {
-                            this.onClickShowDetail(record.key);
+                            this.onClickShowDetail(record);
                         }}>详细</a>
                     ),
             }
@@ -158,16 +158,40 @@ class PatientPage extends Component<Props> {
     }
 
     render() {
+        let searchHolder = `如{"id": "abc123"}, 或{"age": 10}`;
+        let searchTip = `输入JSON语法的键值对, string类型使用"符号。
+        可以搜索的键如下：--- id: string;
+        name: string;
+        age: number;
+        firstDiagnose: string;
+        lastDiagnose: string;
+        cardId: string;
+        phone: string;
+        birthDate: string;
+        diagnose: string;
+        nation: string;
+        occupation: string;
+        smoking: string;
+        firstMlAage: number;
+        pregnantTimes: number;
+        produceChildTimes: number;
+        abortionTimes: number;
+        familyHistory: string;
+        mlBleeding: string;
+        contraceptionWay: string;
+        other: string; ---`; 
         return (
             <Content>
                 <Row type="flex" justify="space-between" style={{height: '100%'}}>
                     <Col span={this.state.showDetail? 10: 24} className={styles.leftMainCtn}>
                         <Row type="flex" justify="end" className={styles.header}>
-                            <Tooltip placement="bottomLeft" title="搜索语法提示">
+                            <Tooltip placement="bottomLeft" title={searchTip}>
                                 <Search
-                                    style={{marginRight: 16, width: 200}}
-                                    placeholder="id搜索"
-                                    onSearch={value => console.log(value)}
+                                    style={{marginRight: 16, width: 320}}
+                                    placeholder={searchHolder}
+                                    onSearch={value => {
+                                        this.onClickSearch(value);
+                                    }}
                                     enterButton
                                     size="small"
 
@@ -218,6 +242,33 @@ class PatientPage extends Component<Props> {
         )
     }
 
+    onClickSearch(syntaxString) {
+        const {actions} = this.props;
+        if (syntaxString == '') {
+            message.success("默认返回,根据id排序的前100位", 1);
+            actions.pa_getPatientList();
+            return;
+        }
+        
+        let syntax;
+        try {
+            syntax = JSON.parse(syntaxString);
+        } catch(e) {
+            message.warning("JSON语法错误: " + e, 2);
+            return;
+        }
+        actions.pa_searchPatient({syntax,
+            retFn: ({success, msg}) => {
+                if (success) {
+                    message.success(msg, 1);
+                } else {
+                    message.warning(msg, 1);
+                }
+            }
+        });
+
+    }
+
     onClickSavePatient() {
         const {selPatientInfo, actions} = this.props;
         // const {id} = selPatientInfo;
@@ -244,12 +295,22 @@ class PatientPage extends Component<Props> {
         });
     }
 
-    onClickShowDetail(item) {
+    onClickDeletePatient() {
+        const {selPatientInfo, actions} = this.props;
+        this.setState({
+            showDetail: false,
+        });
+        actions.pa_delSelPatientInfo({selPatientInfo});
+    }
+
+    onClickShowDetail(record) {
         this.setState({
             showDetail: true,
             newOrUpdate: false,
         });
         console.log('click item');
+        const {actions} = this.props;
+        actions.pa_selPatientInfo(record);
     }
 
     onClickHideDetail() {
@@ -274,7 +335,7 @@ class PatientPage extends Component<Props> {
                         onClick={() => this.onClickSavePatient()}
                     >{this.state.newOrUpdate? '保存': '更新'}</Button>
                     <Button type="danger" style={{marginRight: 8}} size="small" icon="delete"
-                        onClick={() => this.onClickHideDetail()}
+                        onClick={() => this.onClickDeletePatient()}
                     >删除</Button>
                 </Col>
                 <Col span={8}>
@@ -531,21 +592,35 @@ class PatientPage extends Component<Props> {
                             return (
                                 <Panel key={index} style={OutPatientPanelStyle} header={"病历 " + data.date}>
 
-                                    <InputGroup size="small" className={styles.infoRow}>
-                                        <DatePicker style={{width: '20%'}} defaultValue={data.date==''? null: moment(data.date, dateFormat)}
-                                            onChange={
-                                                (date, dateString) => {
-                                                    console.log('date=' + dateString);
-                                                    actions.pa_editSelPatientTreatRecord({
-                                                        modify: {
-                                                            date: dateString,
-                                                        },
-                                                        index: index,
-                                                    });
-                                                }
-                                            }
-                                        />
-                                    </InputGroup>
+                                    <Row>
+                                        <Col span={8}>
+                                            <InputGroup size="small" className={styles.infoRow}>
+                                                <DatePicker style={{width: '100%'}} defaultValue={data.date==''? null: moment(data.date, dateFormat)}
+                                                    onChange={
+                                                        (date, dateString) => {
+                                                            console.log('date=' + dateString);
+                                                            actions.pa_editSelPatientTreatRecord({
+                                                                modify: {
+                                                                    date: dateString,
+                                                                },
+                                                                index: index,
+                                                            });
+                                                        }
+                                                    }
+                                                />
+                                            </InputGroup>
+                                            
+                                        </Col>
+                                        <Col span={16}>
+                                            <Row type="flex" justify="end">
+                                                <Button type="danger" style={{marginTop: 4}} size="small" 
+                                                    onClick={() => this.onClickDeletePatientRecord(index)} >
+                                                    删除病历
+                                                </Button>
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                    
 
                                     <Row>
                                         <Col span={2} style={{marginTop: 5}}>
@@ -832,6 +907,11 @@ class PatientPage extends Component<Props> {
                 </Collapse>
             </div>
         );
+    }
+
+    onClickDeletePatientRecord(index) {
+        const {actions} = this.props;
+        actions.pa_delSelPatientRecord({index});
     }
 
     cb_TreatCollapse = () => {

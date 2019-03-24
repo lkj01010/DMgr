@@ -19,6 +19,8 @@ const initialState: State = {
 
 function newPatientInfo(): PatientInfo {
 	return {
+		key: 99999,
+
 		id: '',
 		name: '',
 		age: 0,
@@ -113,6 +115,7 @@ export default function (state :State = initialState, action: any) {
 				patientInfoList, 
 			};
 		}
+		case at.PA_SEARCH_PATIENT: 
 		case at.PA_SEL_PATIENT_SAVE: {
 			const {success, patientInfoList} = payload;
 			if (success) {
@@ -129,6 +132,24 @@ export default function (state :State = initialState, action: any) {
 				...state,
 				selPatientInfo: newPatientInfo(),
 			}
+		case at.PA_SEL_PATIENT_INFO: {
+			return {
+				...state,
+				selPatientInfo: payload,
+			}
+		}
+		case at.PA_DELETE_PATIENT_INFO: {
+			const {selPatientInfo} = payload;
+			const nextPatientInfoList = [...state.patientInfoList];
+			const index = nextPatientInfoList.findIndex(p => {
+				return selPatientInfo.id === p.id;
+			})
+			nextPatientInfoList.splice(index, 1);
+			return {
+				...state,
+				patientInfoList: nextPatientInfoList,
+			}
+		}
 		case at.PA_SEL_PATIENT_EDIT_BASE: {
 			const {selPatientInfo} = state;
 			// const {base} = selPatientInfo;
@@ -176,7 +197,6 @@ export default function (state :State = initialState, action: any) {
 					...selPatientInfo,
 					treatRecordList: [
 						...treatRecordList,
-						newTreatRecord(),
 					]
 				}
 			};
